@@ -114,7 +114,10 @@ class USVN_Db_Table_Groups extends USVN_Db_TableAuthz {
 	 */
 	public function isAGroup($name)
 	{
-		$group = $this->fetchRow(array('groups_name = ?' => $name));
+		$db = $this->getAdapter();
+		/* @var $db Zend_Db_Adapter_Pdo_Mysql */
+		$where = $db->quoteInto("groups_name = ?", $name);
+		$group = $this->fetchRow($where);
 		if ($group === NULL) {
 			return false;
 		}
