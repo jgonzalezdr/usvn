@@ -20,58 +20,67 @@
 require_once "PHPUnit/Framework/TestCase.php";
 require_once "PHPUnit/Framework/TestSuite.php";
 
-require_once 'library/USVN/autoload.php';
-//require_once 'www/install/Install.php'; //Comment until fix tests
+require_once 'app/install/install.includes.php';
 
-class USVN_Test_DB extends USVN_Test_Test {
+abstract class USVN_Test_DBTestCase extends USVN_Test_TestCase {
+	
+	const DB_INI_FILE = 'tests/db.ini';
+	const DB_HOST = 'localhost';
+	const DB_NAME = 'usvn-test';
+	const DB_USERNAME = 'usvn-test';
+	const DB_PASSWORD = 'usvn-test';
+	const DB_SQLITE_FILE = 'tests/usvn-test.db';
+	const DB_PREFIX = 'usvn_';
+	
 	protected $db;
 
-    protected function setUp() {
+    protected function setUp() 
+	{
 		parent::setUp();
-		$params = array ('host'     => 'localhost',
-			 				'username' => 'usvn-test',
-			 				'password' => 'usvn-test',
-			 				'dbname'   => 'usvn-test');
-		if (getenv('DB') == "PDO_SQLITE" || getenv('DB') === false) {
-			$this->_clean();
-			Install::installDb('tests/db.ini', dirname(__FILE__) . '/../../SQL/', 'localhost', 'usvn-test', 'usvn-test', 'tests/usvn.db', 'usvn_', 'PDO_SQLITE', false);
-			$params['dbname'] = "tests/usvn.db";
-			$this->db = Zend_Db::factory('PDO_SQLITE', $params);
-			file_put_contents('tests/test.ini', '
-database.adapterName = "PDO_SQLITE"
-database.prefix = "usvn_"
-database.options.host = "localhost"
-database.options.username = "usvn-test"
-database.options.password = "usvn-test"
-database.options.dbname = "' . getcwd() . '/tests/usvn.db"
-subversion.passwd = "' . getcwd() . '/tests/htpasswd"
-', FILE_APPEND);
+		
+		$params = array ( 'host' => self::DB_HOST,
+						  'username' => self::DB_USERNAME,
+						  'password' => self::DB_PASSWORD );
+		
+		if (getenv('DB') == "PDO_SQLITE" || getenv('DB') === false) 
+		{
+			$params['dbname'] = self::DB_SQLITE_FILE;
+			$config_dbname = getcwd() . '/' . self::DB_SQLITE_FILE;
+			$dbtype = "PDO_SQLITE";
 		}
-		else {
-			$this->db = Zend_Db::factory(getenv('DB'), $params);
-			$this->_clean();
-			Install::installDb('tests/db.ini', dirname(__FILE__) . '/../../SQL/', 'localhost', 'usvn-test', 'usvn-test', 'usvn-test', 'usvn_', getenv('DB'), false);
-			file_put_contents('tests/test.ini', '
-database.adapterName = "' . getenv('DB') . '"
-database.prefix = "usvn_"
-database.options.host = "localhost"
-database.options.username = "usvn-test"
-database.options.password = "usvn-test"
-database.options.dbname = "usvn-test"
-subversion.passwd = "' . getcwd() . '/tests/htpasswd"
-', FILE_APPEND);
+		else
+		{
+			$params['dbname'] = self::DB_NAME;
+			$config_dbname = self::DB_NAME;
+			$dbtype = getenv('DB');
 		}
+			
+		$this->db = Zend_Db::factory( $dbtype, $params );
+		$this->_clean();
+		Install::installDb( self::DB_INI_FILE, dirname(__FILE__) . '/../../../../library/SQL/', 
+							$params['host'], $params['username'], $params['password'], 
+							$params['dbname'], self::DB_PREFIX, $dbtype, false );
 		Zend_Db_Table::setDefaultAdapter($this->db);
-		USVN_Db_Table::$prefix = "usvn_";
-		$config = new USVN_Config_Ini('tests/test.ini', 'general');
-		Zend_Registry::set('config', $config);
+		USVN_Db_Table::$prefix = self::DB_PREFIX;
+
+		file_put_contents( CONFIG_FILE, '
+database.adapterName = "PDO_SQLITE"
+database.prefix = "' . self::DB_PREFIX . '"
+database.options.host = "' . $params['host'] . '"
+database.options.username = "' . $params['username'] . '"
+database.options.password = "' . $params['password'] . '"
+database.options.dbname = "' . $config_dbname . '"
+', FILE_APPEND);
+
+		$config = new USVN_Config_Ini( CONFIG_FILE, USVN_CONFIG_SECTION );
+		Zend_Registry::set( 'config', $config );
     }
 
 	protected function _clean()
 	{
 		if (getenv('DB') == "PDO_SQLITE" || getenv('DB') === false) {
-			if (file_exists("tests/usvn.db")) {
-				@unlink("tests/usvn.db");
+			if (file_exists( self::DB_SQLITE_FILE )) {
+				@unlink( self::DB_SQLITE_FILE );
 			}
 		}
 		else {
@@ -79,10 +88,14 @@ subversion.passwd = "' . getcwd() . '/tests/htpasswd"
 		}
 	}
 
-    protected function tearDown() {
-        $this->_clean();
-        $this->db->closeConnection();
-        $this->db = null;
+    protected function tearDown() 
+	{
+		if( $this->db !== null )
+		{
+			$this->_clean();
+			$this->db->closeConnection();
+			$this->db = null;
+		}
 		parent::tearDown();
     }
 

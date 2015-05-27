@@ -71,11 +71,11 @@ class USVN_ConsoleUtils
 	* @param reference return value
 	* @return string Ouput of STDOUT and STDERR
 	*/
-	static public function runCmdCaptureMessageUnsafe($command, &$return)
+	static public function runCmdCaptureMessageUnsafe($command, &$return, $capture_stderr = true)
 	{
 		USVN_ConsoleUtils::prepareLang();
 		ob_start();
-		passthru($command . " 2>&1", $return);
+		passthru($command . ($capture_stderr ? " 2>&1" : ""), $return);
 		$msg = ob_get_contents();
 		ob_end_clean();
 		USVN_ConsoleUtils::restoreLang();
@@ -97,5 +97,28 @@ class USVN_ConsoleUtils
 		ob_end_clean();
 		USVN_ConsoleUtils::restoreLang();
 		return($return);
+	}
+	
+	static public function runCmdSendMessageToStdin( $command, &$return_code, $message )
+	{
+		$descriptor_spec = array(
+			0 => array( "pipe", "r" ),
+			1 => array( "pipe", "w" ),
+		);
+
+		$process = proc_open( $command, $descriptor_spec, $pipes );
+
+		if( is_resource($process) ) 
+		{
+			fwrite( $pipes[0], $message );
+			fclose( $pipes[0] );
+
+			$stdout = stream_get_contents( $pipes[1] );
+			fclose( $pipes[1] );
+
+			$return_code = proc_close( $process );
+			
+			return $stdout;
+		}		
 	}
 }

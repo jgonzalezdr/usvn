@@ -44,6 +44,7 @@ class ProjectadminController extends AdminadminController
 	{
 		$table = new USVN_Db_Table_Projects();
 		$this->view->project = $table->createRow();
+		$this->view->template_list = USVN_SVNUtils::getRepositoryTemplates();
 	}
 
 	public function createAction()
@@ -54,7 +55,15 @@ class ProjectadminController extends AdminadminController
 		}
 		try {
 			$identity = Zend_Auth::getInstance()->getIdentity();
-			USVN_Project::createProject($data, $identity['username'], $_POST['creategroup'], $_POST['addmetogroup'], $_POST['admin'], $_POST['createsvndir']);
+			$template_name = $_POST['prj_template'];
+			if( $template_name == NULL )
+			{
+				USVN_Project::createProject($data, $identity['username'], $_POST['creategroup'], $_POST['addmetogroup'], $_POST['admin'], $_POST['createsvndir']);
+			}
+			else
+			{
+				USVN_Project::createProjectFromTemplate( $data, $identity['username'], $template_name, $_POST['admin'], $_POST['group_admin'] );
+			}
 			$this->_redirect("/admin/project/");
 		}
 		catch (USVN_Exception $e) {

@@ -32,7 +32,7 @@ class USVN_SVNLog
 	*/
 	public static function log($repository, $limit = 0, $start = 0, $end = 0)
 	{		 
-        $repository = USVN_SVNUtils::getRepositoryPath($repository);
+        $repository = USVN_SVNUtils::getRepositoryFileUrl($repository);
         if ($limit) {
 			$limit = escapeshellarg($limit);
         	$limit = "--limit $limit";

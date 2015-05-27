@@ -29,7 +29,7 @@ define('USVN_CONFIG_SECTION', 'general');
 define('USVN_ROUTES_CONFIG_FILE', 'www/USVN/routes.ini');
 
 
-class USVN_Test_Controller extends USVN_Test_DB {
+class USVN_Test_Controller extends USVN_Test_DBTestCase {
 	/* To be overload */
 	protected $controller_name;
 	protected $controller_class;

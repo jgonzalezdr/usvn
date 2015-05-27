@@ -136,22 +136,6 @@ class USVN_SVNUtils
 		return explode(".", $version);
 	}
 
-
-	/**
-	* It's for use with testunit. This method simulate svnadmin create $path
-	*
-	* @param string Path to create directory structs
-	*/
-	public static function createSvnDirectoryStruct($path)
-	{
-		@mkdir($path);
-		@mkdir($path . "/hooks");
-		@mkdir($path . "/locks");
-		@mkdir($path . "/conf");
-		@mkdir($path . "/dav");
-		@mkdir($path . "/db");
-	}
-
 	/**
 	* Get the command svn
 	*
@@ -180,7 +164,7 @@ class USVN_SVNUtils
     */
     private static function _svnImport($server, $local)
     {
-        $server = USVN_SVNUtils::getRepositoryPath($server);
+        $server = USVN_SVNUtils::getRepositoryFileUrl($server);
         $local = escapeshellarg($local);
         $cmd = USVN_SVNUtils::svnCommand("import --non-interactive --username USVN -m \"" . T_("Commit by USVN") ."\" $local $server");
 		$message = USVN_ConsoleUtils::runCmdCaptureMessage($cmd, $return);
@@ -190,10 +174,7 @@ class USVN_SVNUtils
     }
 
     /**
-    * Create SVN repository with standard organisation
-    * /trunk
-    * /tags
-    * /branches
+    * Create empty SVN repository
     *
     * @param string Path to create subversion
     */
@@ -239,7 +220,7 @@ class USVN_SVNUtils
     public static function checkoutSvn($src, $dst)
     {
 		$dst = escapeshellarg($dst);
-		$src = USVN_SVNUtils::getRepositoryPath($src);
+		$src = USVN_SVNUtils::getRepositoryFileUrl($src);
 		$message = USVN_ConsoleUtils::runCmdCaptureMessage(USVN_SVNUtils::svnCommand("co $src $dst"), $return);
 		if ($return) {
 			throw new USVN_Exception(T_("Can't checkout subversion repository: %s"), $message);
@@ -255,7 +236,7 @@ class USVN_SVNUtils
 	*/
 	public static function listSvn($repository, $path)
 	{
-		$escape_path = USVN_SVNUtils::getRepositoryPath($repository . '/' . $path);
+		$escape_path = USVN_SVNUtils::getRepositoryFileUrl($repository . '/' . $path);
 		$lists = USVN_ConsoleUtils::runCmdCaptureMessageUnsafe(USVN_SVNUtils::svnCommand("ls --xml $escape_path"), $return);
 		if ($return) {
 			throw new USVN_Exception(T_("Can't list subversion repository: %s"), $lists);
@@ -348,12 +329,12 @@ class USVN_SVNUtils
 	}
 
 	/**
-	 * Return clean version of a Subversion repository path betwenn ' and with file:// before
+	 * Return clean version of a Subversion repository path between double quotes and with file:// before
 	 *
 	 * @param string Path to repository
 	 * @return string absolute path to repository
 	 */
-	public static function getRepositoryPath($path)
+	public static function getRepositoryFileUrl($path)
 	{
 		if(strtoupper(substr(PHP_OS, 0,3)) == 'WIN' ) {
 			$newpath = realpath($path);
@@ -364,7 +345,7 @@ class USVN_SVNUtils
 			else {
 				$path = $newpath;
 			}
-			return "\"file:///" . str_replace('\\', '/', $path) . "\"";
+			return '"file:///' . str_replace('\\', '/', $path) . '"';
 		}
 		$newpath = realpath($path);
 		if ($newpath === FALSE) {
@@ -389,4 +370,241 @@ class USVN_SVNUtils
 		$url .= $project . $path;
 		return $url;
 	}
+	
+	/**
+	 * Get the path in the filesystem to the given repository.
+	 * 
+	 * @param USVN_Config_Ini $config [in] Global configuration
+	 * @param string $repo_name [in] Name of the repository
+	 * @return string Path in the filesystem to the given repository
+	 */
+	public static function getRepositoryFilesystemPath( $config, $repo_name )
+	{
+		return $config->subversion->path
+		. DIRECTORY_SEPARATOR
+		. 'svn'
+		. DIRECTORY_SEPARATOR
+		. $repo_name;
+	}
+
+	/**
+	 * Get the path in the filesystem to the templates repository.
+	 * 
+	 * @param USVN_Config_Ini $config [in] Global configuration
+	 * @return string Path in the filesystem to the templates repository.
+	 */
+	private static function getTemplatesRepoFilesystemPath( $config )
+	{
+		if( empty( $config->projectTemplates ) ||
+		    empty( $config->projectTemplates->repoName ) )
+		{
+			return NULL;
+		}
+		
+		return self::getRepositoryFilesystemPath( $config, $config->projectTemplates->repoName );
+	}
+
+	/**
+	 * Get the path to the templates repository in URL form (file://...).
+	 * 
+	 * @param USVN_Config_Ini $config [in] Global configuration
+	 * @return string Path in URL form to the templates repository.
+	 */
+	private static function getTemplatesRepoFileUrl( $config )
+	{
+		$path = self::getTemplatesRepoFilesystemPath( $config );
+		if( empty( $path ) )
+		{
+			return NULL;
+		}
+		
+		return self::getRepositoryFileUrl( $path );
+	}
+	
+	/**
+	 * Get the list of repository templates.
+	 * 
+	 * @return array List of templates as a hashed array
+	 * @throws USVN_Exception
+	 */
+	public static function getRepositoryTemplates()
+	{
+		$config = Zend_Registry::get('config');
+		
+		$path = self::getTemplatesRepoFileUrl( $config );
+		if( empty( $path ) )
+		{
+			return NULL;
+		}
+		
+		$cmd_output = USVN_ConsoleUtils::runCmdCaptureMessageUnsafe( USVN_SVNUtils::svnCommand("ls $path"), $return_code );
+		if ($return_code) 
+		{
+			throw new USVN_Exception(T_("Can't list subversion templates repository: %s"), $cmd_output);
+		}
+		
+		$template_list = explode("\n", $cmd_output);
+		
+		$template_hash = array();
+		foreach( $template_list as $value )
+		{
+			if( empty($value) ) continue;
+			$trimmed_value = substr( $value, 0, -1 );
+			$template_hash[$trimmed_value] = $trimmed_value;
+		}
+		
+		return $template_hash;
+	}
+
+	/**
+	 * Get a descriptive message for the last JSON decoding error.
+	 * @return string Message for the last JSON decoding error.
+	 */
+	private static function getJsonErrorMsg()
+	{
+		if( function_exists('json_last_error_msg') ) 
+		{
+			return json_last_error_msg();
+		}
+		else
+		{
+			switch( json_last_error() ) 
+			{
+			case JSON_ERROR_NONE:
+				return 'No error';
+			case JSON_ERROR_DEPTH:
+				return 'Maximum stack depth exceeded';
+			case JSON_ERROR_STATE_MISMATCH:
+				return 'Underflow or the modes mismatch';
+			case JSON_ERROR_CTRL_CHAR:
+				return 'Unexpected control character found';
+			case JSON_ERROR_SYNTAX:
+				return 'Syntax error, malformed JSON';
+			case JSON_ERROR_UTF8:
+				return 'Malformed UTF-8 characters, possibly incorrectly encoded';
+			default:
+				return 'Unknown error';
+			}			
+		}
+	}
+	
+	/**
+	 * Decode the SVN access control file (that shall be in JSON form) into
+	 * a hashed array containing the decoded elements.
+	 * 
+	 * @param string $svnaccess_contents [in] SVN access control file in JSON form.
+	 * @return array Decoded elements
+	 * @throws USVN_Exception
+	 */
+	private static function parseAccessFile( $svnaccess_contents )
+	{
+		$svnaccess_specs = json_decode( $svnaccess_contents, TRUE );
+		if( json_last_error() != JSON_ERROR_NONE )
+		{
+			throw new USVN_Exception( "Error parsing '%s': %s", $svnaccess_filename, self::getJsonErrorMsg() );
+		}
+		return $svnaccess_specs;
+	}
+	
+	/**
+	 * Get the initializer script for a new repository from a repository template,
+	 * along with the access control specs (if defined in the template).
+	 * 
+	 * @param string $template_name [in] The name of the template to copy
+	 * @param string $new_repo_name [in] The name of the new repository
+	 * @param array $svnaccess_specs [out] SVN access control specs
+	 * @return string Initializer script
+	 * @throws USVN_Exception
+	 */
+	public static function getInitScriptFromTemplate( $template_name, $new_repo_name, &$svnaccess_specs )
+	{
+		$config = Zend_Registry::get('config');
+		
+		$template_svn_path = self::getTemplatesRepoFilesystemPath( $config );
+		if( empty( $template_svn_path ) )
+		{
+			throw new USVN_Exception( T_("Can't get templates repository path from configuration.") );
+		}
+		
+		// Get template dump
+		$cmd = 'svnadmin dump -r HEAD "'.$template_svn_path.'"';
+		$initial_dump = USVN_ConsoleUtils::runCmdCaptureMessageUnsafe( $cmd, $return_code, false );
+		if( $return_code ) 
+		{
+			throw new USVN_Exception(T_("Can't retrieve project template from repository: %s."), $initial_dump);
+		}
+		
+		// Delete the entries for other templates and for the template's root directory
+		$new_dump = preg_replace( "~^Node-path: (?!".$template_name."\/).*?(?=(?:^Node-path:|\Z))~sm", "", $initial_dump );
+		
+		// Rebase remaining entries paths
+		$new_dump = preg_replace( "~^Node-path: ".$template_name."\/~m", "Node-path: ", $new_dump );
+		
+		// Find access control file
+		$svnaccess_filename = "svnaccess.json";
+		$svnaccess_specs = NULL;
+		if( preg_match( "~^Node-path: ".$svnaccess_filename."$.*?PROPS-END$(.*?)(?:^Node-path:|\Z)~sm", $new_dump, $svnaccess_matches) )
+		{
+			// Delete access control file
+			$new_dump = preg_replace( "~^Node-path: ".$svnaccess_filename."$.*?(?=(?:Node-path:|\Z))~sm", "", $new_dump, 1, $regex_count );
+			if( $regex_count != 1 )
+			{
+				throw new USVN_Exception(T_("Couldn't delete the access file from template:\n%s"), $initial_dump);
+			}
+			
+			// Parse access control file
+			$svnaccess_specs = USVN_SVNUtils::parseAccessFile( $svnaccess_matches[1] );
+		}
+
+		// Replace log
+		$new_dump = preg_replace( "~svn:log\nV.*?\n.*?((\nK \d+\n)|(\nPROPS-END\n))~sm", "svn:log\nV 8\nCreation$1", $new_dump, 1, $regex_count );
+		if( $regex_count != 1 )
+		{
+			throw new USVN_Exception(T_("Couldn't replace the template log:\n%s"), $initial_dump);
+		}
+
+		// Replace author
+		$new_dump = preg_replace( "~svn:author\nV.*?\n.*?\n~sm", "svn:author\nV 4\nUSVN\n", $new_dump, 1, $regex_count );
+		if( $regex_count != 1 )
+		{
+			throw new USVN_Exception(T_("Couldn't replace the template log:\n%s"), $initial_dump);
+		}
+		
+		// Replace log date
+		$log_date = gmdate( "Y-m-d\TH:i:s.u\Z" );
+		$new_dump = preg_replace( "~svn:date\nV.*?\n.*?\n~sm", "svn:date\nV ".strlen($log_date)."\n".$log_date."\n", $new_dump, 1, $regex_count );
+		if( $regex_count != 1 )
+		{
+			throw new USVN_Exception(T_("Couldn't replace the template date:\n%s"), $initial_dump);
+		}
+
+		// Replace project name placeholders (only in paths)
+		$new_dump = preg_replace( "~(Node-path: .*?)#ProjectName#(.*)~s", "$1".$new_repo_name."$2", $new_dump );
+
+		
+		return $new_dump;
+	}
+
+	/**
+	 * Initializes a repository from an initialization script.
+	 * 
+	 * @param string $new_repo_name [in] The name of the new repository
+	 * @param string $init_script [in] Initializer script for the new repository
+	 * @throws USVN_Exception
+	 */
+	public static function initRepositoryFromScript( $new_repo_name, $init_script )
+	{
+		$config = Zend_Registry::get('config');
+
+		$new_repo_svn_path = self::getRepositoryFilesystemPath( $config, $new_repo_name );
+
+		// Load template dump
+		$cmd = "svnadmin load $new_repo_svn_path";
+		$load_msg = USVN_ConsoleUtils::runCmdSendMessageToStdin( $cmd, $return_code, $init_script );
+		if( $return_code ) 
+		{
+			throw new USVN_Exception(T_("Can't import project template into the new repository: %s"), $load_msg);
+		}
+	}
+
 }

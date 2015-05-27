@@ -33,7 +33,28 @@ class ConfigadminController extends AdminadminController
 		{
 			$this->view->config->ldap->options = array();
 		}
-        $this->view->locale = new Zend_Locale(USVN_Translation::getLanguage());
+		$this->view->locale = new Zend_Locale(USVN_Translation::getLanguage());
+		
+		$table = new USVN_Db_Table_Projects();
+		$projectRows = $table->fetchAll(null, "projects_name");
+		
+		$projects = array();
+		$projects[""] = "";
+		foreach( $projectRows as $project )
+		{
+			$projects[$project->projects_name] = $project->projects_name;
+		}
+		$this->view->projects = $projects;
+
+		if( $this->view->config->projectTemplates == NULL )
+		{
+			$this->view->config->projectTemplates = array();
+		}		
+		if( $this->view->config->projectTemplates->repoName == NULL )
+		{
+			$this->view->config->projectTemplates->repoName = "";
+		}		
+		
 		$this->render("index");
 	}
 
@@ -43,6 +64,7 @@ class ConfigadminController extends AdminadminController
 		USVN_Config::setTimeZone($_POST['timezone']);
 		USVN_Config::setTemplate($_POST['template']);
 		USVN_Config::setCheckForUpdate($_POST['checkforupdate']);
+		USVN_Config::setProjectTemplatesRepo($_POST['prj_templates_repo']);
 		$siteDatas = array('title'			=> $_POST['siteTitle'],
 							'ico'			=> $_POST['siteIco'],
 							'logo'			=> $_POST['siteLogo']);

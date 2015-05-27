@@ -19,12 +19,18 @@
 require_once "PHPUnit/Framework/TestCase.php";
 require_once "PHPUnit/Framework/TestSuite.php";
 
-require_once 'library/USVN/autoload.php';
+require_once 'app/install/install.includes.php';
 
 define('USVN_URL_SEP', ':');
+define('CONFIG_FILE', 'tests/test.ini');
 
-abstract class USVN_Test_Test extends PHPUnit_Framework_TestCase {
+abstract class USVN_Test_TestCase extends PHPUnit_Framework_TestCase {
     private $_path;
+	
+	const TESTING_DIR = "tests";
+	const USVN_PATH = "tests/usvn";
+	const REPOS_PATH = "tests/usvn/svn";
+	const SVN_URL = "http://localhost/";
 
     protected function setUp() {
         error_reporting(E_ALL | E_STRICT);
@@ -32,20 +38,22 @@ abstract class USVN_Test_Test extends PHPUnit_Framework_TestCase {
         $this->_path = getcwd();
 		$this->setConsoleLocale();
 		USVN_Translation::initTranslation('en_US', 'app/locale');
-		USVN_DirectoryUtils::removeDirectory('tests/');
-		mkdir("tests");
-		mkdir("tests/tmp");
-		mkdir("tests/tmp/svn");
-		file_put_contents('tests/test.ini', '[general]
-subversion.path = "' . getcwd() . '/tests/tmp/"
-subversion.passwd = "' . getcwd() . '/tests/tmp/htpasswd"
-subversion.authz = "' . getcwd() . '/tests/tmp/authz"
-subversion.url = "http://localhost/"
+		
+		USVN_DirectoryUtils::removeDirectory(self::TESTING_DIR.'/');
+		mkdir(self::TESTING_DIR);
+		mkdir(self::USVN_PATH);
+		mkdir(self::REPOS_PATH);
+		
+		file_put_contents(CONFIG_FILE, '[general]
+subversion.path = "' . getcwd() . '/' . self::USVN_PATH . '"
+subversion.passwd = "' . getcwd() . '/' . self::USVN_PATH . '/htpasswd"
+subversion.authz = "' . getcwd() . '/' . self::USVN_PATH . '/authz"
+subversion.url = "' . self::SVN_URL . '"
 version = "0.8.4"
 translation.locale = "en_US"
 ');
-		$config = new USVN_Config_Ini('tests/test.ini', 'general');
-		Zend_Registry::set('config', $config);
+		$config = new USVN_Config_Ini( CONFIG_FILE, USVN_CONFIG_SECTION );
+		Zend_Registry::set( 'config', $config );
     }
 
     protected function tearDown() {

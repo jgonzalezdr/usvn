@@ -152,4 +152,17 @@ class USVN_Config
 		$config->alwaysUseDatabaseForLogin = $defaultUser;
 		$config->save();
 	}
+
+	/**
+	* Set the repository that contains templates for new projects.
+	*
+	* @param bool
+	*/
+	static public function setProjectTemplatesRepo($repo_name)
+	{
+		$config = new USVN_Config_Ini(USVN_CONFIG_FILE, USVN_CONFIG_SECTION);
+		$config->projectTemplates = array( "repoName" => $repo_name );
+		$config->save();
+	}
+
 }
