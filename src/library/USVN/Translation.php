@@ -31,9 +31,9 @@ class USVN_Translation
 	*/
 	public static function initTranslation($language, $locale_directory)
 	{
-		USVN_Translation::$language = $language;
-		USVN_Translation::$locale_directory = $locale_directory;
-		USVN_Translation::$translation_instance = new Zend_Translate('gettext', "$locale_directory/$language/messages.mo", $language, array('disableNotices' => true));
+		self::$language = $language;
+		self::$locale_directory = $locale_directory;
+		self::$translation_instance = new Zend_Translate('gettext', "$locale_directory/$language/messages.mo", $language, array('disableNotices' => true));
 	}
 
 	/**
@@ -43,7 +43,7 @@ class USVN_Translation
 	*/
 	public static function getLanguage()
 	{
-		return USVN_Translation::$language;
+		return self::$language;
 	}
 
 	/**
@@ -53,7 +53,7 @@ class USVN_Translation
 	*/
 	public static function getLocaleDirectory()
 	{
-		return USVN_Translation::$locale_directory;
+		return self::$locale_directory;
 	}
 
 	public static function isValidLanguageDirectory($directory)
@@ -78,7 +78,7 @@ class USVN_Translation
 		$res = array();
 		$list = USVN_DirectoryUtils::listDirectory(USVN_Translation::$locale_directory);
 		foreach ($list as $filename) {
-			if (USVN_Translation::isValidLanguageDirectory(USVN_Translation::$locale_directory . '/' . $filename)) {
+			if (self::isValidLanguageDirectory(USVN_Translation::$locale_directory . '/' . $filename)) {
 				$res[] = $filename;
 			}
 		}
@@ -93,6 +93,13 @@ class USVN_Translation
 	*/
 	public static function  _($str)
 	{
-		return USVN_Translation::$translation_instance->_($str);
+		if( self::$translation_instance )
+		{
+			return USVN_Translation::$translation_instance->_($str);
+		}
+		else
+		{
+			return $str;
+		}
 	}
 }
