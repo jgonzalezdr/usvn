@@ -75,7 +75,7 @@ class USVN_ConsoleUtils
 	{
 		USVN_ConsoleUtils::prepareLang();
 		ob_start();
-		passthru($command . ($capture_stderr ? " 2>&1" : ""), $return);
+		passthru($command . ($capture_stderr ? " 2>&1" : " 2>/dev/null"), $return);
 		$msg = ob_get_contents();
 		ob_end_clean();
 		USVN_ConsoleUtils::restoreLang();
