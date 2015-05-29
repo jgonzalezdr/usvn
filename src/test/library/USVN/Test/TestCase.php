@@ -37,7 +37,7 @@ abstract class USVN_Test_TestCase extends PHPUnit_Framework_TestCase {
         date_default_timezone_set('UTC');
         $this->_path = getcwd();
 		$this->setConsoleLocale();
-		USVN_Translation::initTranslation('en_US', 'app/locale');
+		//USVN_Translation::initTranslation('en_TEST', 'app/locale'); // Don't translate
 		
 		USVN_DirectoryUtils::removeDirectory(self::TESTING_DIR.'/');
 		mkdir(self::TESTING_DIR);
