@@ -272,7 +272,7 @@ class USVN_Project
 					$existing_group = $groups->findByGroupsName( $existing_group_name );
 					if( empty( $existing_group ) )
 					{
-						throw new USVN_Exception( T_("Pre-defined group %s doesn't exists."), $existing_group_name );
+						throw new USVN_Exception( T_("Pre-defined group %s doesn't exist."), $existing_group_name );
 					}
 					$group_id = $existing_group->groups_id;
 					if( ! $project->groupIsMember($existing_group) )
@@ -282,11 +282,11 @@ class USVN_Project
 				}
 				else
 				{
-					$group_id = $created_groups[$group_name];
-					if( empty( $group_id ) )
+					if( !array_key_exists( $group_name, $created_groups ) )
 					{
 						throw new USVN_Exception( T_("Project group %s hasn't been defined in access file."), $group_name );
 					}
+					$group_id = $created_groups[$group_name];
 				}
 				
 				$read_right = ( strpos( $access_type, "r" ) !== false );

@@ -501,7 +501,7 @@ class USVN_SVNUtils
 		$svnaccess_specs = json_decode( $svnaccess_contents, TRUE );
 		if( json_last_error() != JSON_ERROR_NONE )
 		{
-			throw new USVN_Exception( "Error parsing '%s': %s", $svnaccess_filename, self::getJsonErrorMsg() );
+			throw new USVN_Exception( "Error parsing SVN access control file: %s", self::getJsonErrorMsg() );
 		}
 		return $svnaccess_specs;
 	}

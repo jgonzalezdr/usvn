@@ -158,7 +158,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 	public function testCreateProjectWithMultiDirectoryOk()
 	{
 		// Setup
-		$project_name = 'ok/InsertProjectOk';
+		$project_name = 'ok/TestProject';
 
 		// Exercise
 		$project = USVN_Project::createProject( array( 'projects_name' => $project_name, 'projects_start_date' => '1984-12-03 00:00:00' ),
@@ -171,7 +171,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 	public function testCreateProjectWithGroupWithAdmin()
 	{
 		// Setup
-		$project_name = 'InsertProjectOk';
+		$project_name = 'TestProject';
 
 		// Exercise
 		$project = USVN_Project::createProject( array( 'projects_name' => $project_name, 'projects_start_date' => '1984-12-03 00:00:00' ),
@@ -190,7 +190,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 	public function testCreateProjectWithGroupWithAdminWithStdDir()
 	{
 		// Setup
-		$project_name = 'InsertProjectOk';
+		$project_name = 'TestProject';
 
 		// Exercise
 		$project = USVN_Project::createProject( array( 'projects_name' => $project_name, 'projects_start_date' => '1984-12-03 00:00:00' ),
@@ -212,7 +212,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 	public function testCreateProjectWithGroupButNotGroupMemberWithAdmin()
 	{
 		// Setup
-		$project_name = 'InsertProjectOk';
+		$project_name = 'TestProject';
 
 		// Exercise
 		$project = USVN_Project::createProject( array( 'projects_name' => $project_name, 'projects_start_date' => '1984-12-03 00:00:00' ),
@@ -231,7 +231,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 	public function testCreateProjectWithGroupWithoutAdmin()
 	{
 		// Setup
-		$project_name = 'InsertProjectOk';
+		$project_name = 'TestProject';
 
 		// Exercise
 		$project = USVN_Project::createProject( array( 'projects_name' => $project_name, 'projects_start_date' => '1984-12-03 00:00:00' ),
@@ -250,7 +250,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 	public function testCreateProjectWithoutGroupWithAdmin()
 	{
 		// Setup
-		$project_name = 'InsertProjectOk';
+		$project_name = 'TestProject';
 
 		// Exercise
 		$project = USVN_Project::createProject( array( 'projects_name' => $project_name, 'projects_start_date' => '1984-12-03 00:00:00' ),
@@ -267,7 +267,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 	public function testCreateProjectWithoutGroupWithAdminButWithStdDir()
 	{
 		// Setup
-		$project_name = 'InsertProjectOk';
+		$project_name = 'TestProject';
 
 		// Exercise
 		$project = USVN_Project::createProject( array( 'projects_name' => $project_name, 'projects_start_date' => '1984-12-03 00:00:00' ),
@@ -284,7 +284,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 	public function testCreateProjectWithoutGroupWithoutAdmin()
 	{
 		// Setup
-		$project_name = 'InsertProjectOk';
+		$project_name = 'TestProject';
 
 		// Exercise
 		$project = USVN_Project::createProject( array( 'projects_name' => $project_name, 'projects_start_date' => '1984-12-03 00:00:00' ),
@@ -301,7 +301,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 	public function testCreateProjectWithoutGroupWithoutAdminButWithStdDir()
 	{
 		// Setup
-		$project_name = 'InsertProjectOk';
+		$project_name = 'TestProject';
 
 		// Exercise
 		$project = USVN_Project::createProject( array( 'projects_name' => $project_name, 'projects_start_date' => '1984-12-03 00:00:00' ),
@@ -318,21 +318,26 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 	public function testCreateProjectWithGroupWithInvalidAdmin()
 	{
 		// Setup
-		$project_name = 'InsertProjectBAD';
+		$project_name = 'TestProject';
+		$admin_name = "fake";
 
 		// Exercise
 		try
 		{
 			USVN_Project::createProject( array( 'projects_name' => $project_name, 'projects_start_date' => '1984-12-03 00:00:00' ), 
-					"fake", true, true, true, true );
+					$admin_name, true, true, true, true );
 
 		}
 
 		// Verify
 		catch( USVN_Exception $e )
 		{
+			// Exception thrown as expected
+			$this->assertEquals( "Login $admin_name not found", $e->getMessage(), "Wrong exception thrown" );
+			
 			$table = new USVN_Db_Table_Projects();
 			$this->assertFalse( $table->isAProject( $project_name ), "The project shouldn't have been created" );
+			
 			return;
 		}
 		$this->fail( "The project creation should have failed" );
@@ -357,7 +362,8 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		// Verify
 		catch( USVN_Exception $e )
 		{
-			// Expected exception thrown
+			// Exception thrown as expected
+			$this->assertEquals( "Group $project_name already exists.", $e->getMessage(), "Wrong exception thrown" );
 			return;
 		}
 		$this->fail( "The project creation should have failed" );
@@ -366,8 +372,8 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 	
 	/* public function testCreateProjectSubDirectorySVNAlreadyExist()
 	  {
-	  USVN_Project::createProject(array('projects_name' => 'InsertProjectOk',  'projects_start_date' => '1984-12-03 00:00:00'), "test", true, true, true, true);
-	  $new_project = 'InsertProjectOk/OtherProject';
+	  USVN_Project::createProject(array('projects_name' => 'TestProject',  'projects_start_date' => '1984-12-03 00:00:00'), "test", true, true, true, true);
+	  $new_project = 'TestProject/OtherProject';
 
 	  try {
 	  USVN_Project::createProject(array('projects_name' => $new_project,  'projects_start_date' => '1984-12-03 00:00:00'), "test", true, true, true, true);
@@ -382,7 +388,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 	public function testDeleteProject()
 	{
 		// Setup
-		$project_name = 'InsertProjectOk';
+		$project_name = 'TestProject';
 
 		USVN_Project::createProject( array( 'projects_name' => $project_name, 'projects_start_date' => '1984-12-03 00:00:00' ),
 				$this->_user->users_login, true, true, true, false );
@@ -403,7 +409,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 	public function testDeleteProjectNotExisting()
 	{
 		// Setup
-		$project_name = 'InsertProjectOk';
+		$project_name = 'TestProject';
 
 		// Exercise
 		try
@@ -414,7 +420,8 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		// Verify
 		catch( USVN_Exception $e )
 		{
-			// Expected exception thrown
+			// Exception thrown as expected
+			$this->assertEquals( "Project $project_name doesn't exist.", $e->getMessage(), "Wrong exception thrown" );
 			return;
 		}
 		$this->fail( "The project deletion should have failed" );
@@ -438,7 +445,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		}
     }
 	
-	private function _createAccessFile( $wc_path )
+	private function _createAccessFile( $wc_path, $access_file_extra )
 	{
 		file_put_contents( $wc_path . "/Template1/svnaccess.json", 
 '{
@@ -447,7 +454,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		"": {
 			"group1": "rw",
 			"group2": "r",
-			"group3": "r"
+			"group3": "r"' . ($access_file_extra != NULL ? $access_file_extra : '') . '
 		},
 		"/dir1": {
 			"group2": "rw",
@@ -457,7 +464,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 }' );
 	}
 
-	private function _setupTemplateRepo( $create_access_file )
+	private function _setupTemplateRepo( $create_access_file, $access_file_extra = NULL )
 	{
 		$templates_repo_name = 'RepoTemplates';
 		
@@ -477,7 +484,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		
 		if( $create_access_file )
 		{
-			$this->_createAccessFile( $wc_path );
+			$this->_createAccessFile( $wc_path, $access_file_extra );
 		}
 		
 		$this->_svnImport( $templates_repo_name, $wc_path );
@@ -547,7 +554,6 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 
 		$this->_checkRepoStructureTemplate1( $project_name );
 	}
-
 	
 	public function testCreateProjectFromTemplateWithAdminWithAccessFile()
 	{
@@ -582,6 +588,98 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		$this->_checkRightsOnPathForGroup( $project_name, $project_name . "-group3", '/dir1', 0, 0 );
 
 		$this->_checkRepoStructureTemplate1( $project_name );
+	}
+
+	public function testCreateProjectFromTemplateWithAdminWithAccessFileButUndefinedProjectGroup()
+	{
+		// Setup
+		$project_name = 'TestProject';
+		$template_name = "Template1";
+		$extra_group = "group4";
+		
+		$this->_setupTemplateRepo( true, ', "'.$extra_group.'": "rw"' );
+
+		// Exercise
+		try
+		{
+			$project = USVN_Project::createProjectFromTemplate( array( 'projects_name' => $project_name, 'projects_start_date' => '1984-12-03 00:00:00' ),
+						$this->_user->users_login, $template_name, true, true );
+		}
+		
+		// Verify
+		catch( USVN_Exception $e )
+		{
+			// Exception thrown as expected
+			$this->assertEquals( "Project group $extra_group hasn't been defined in access file.", $e->getMessage(), "Wrong exception thrown" );
+			return;
+		}
+		$this->fail( "The project creation should have failed" );
+	}
+
+	public function testCreateProjectFromTemplateWithAdminWithAccessFileWithPredefinedGroup()
+	{
+		// Setup
+		$project_name = 'TestProject';
+		$template_name = "Template1";
+		$extra_group = "TestGroup";
+		
+		$this->_setupTemplateRepo( true, ', "#'.$extra_group.'": "rw"' );
+
+		$table_groups = new USVN_Db_Table_Groups();
+		$new_group = $table_groups->createRow( array( "groups_name" => $extra_group ) );
+		$new_group->save();
+		
+		// Exercise
+		$project = USVN_Project::createProjectFromTemplate( array( 'projects_name' => $project_name, 'projects_start_date' => '1984-12-03 00:00:00' ),
+						$this->_user->users_login, $template_name, true, true );
+
+		// Verify
+		$this->_checkReturnedProject( $project_name, $project );
+
+		$this->_checkCreateProjectWithoutGroup( $project_name, true );
+		
+		$created_groups = $table_groups->allGroupsLike( $project_name )->toArray();
+		$this->assertCount( 3, $created_groups, "Wrong number of created project groups" );
+		
+		$this->assertEquals( $project_name . "-group1", $created_groups[0]['groups_name'], "Unexpected group name" );
+		$this->assertEquals( $project_name . "-group2", $created_groups[1]['groups_name'], "Unexpected group name" );
+		$this->assertEquals( $project_name . "-group3", $created_groups[2]['groups_name'], "Unexpected group name" );
+
+		$this->_checkRightsOnPathForGroup( $project_name, $project_name . "-group1", '/', 1, 1 );
+		$this->_checkRightsOnPathForGroup( $project_name, $project_name . "-group2", '/', 1, 0 );
+		$this->_checkRightsOnPathForGroup( $project_name, $project_name . "-group3", '/', 1, 0 );
+		$this->_checkRightsOnPathForGroup( $project_name, $extra_group, '/', 1, 1 );
+
+		$this->_checkRightsOnPathForGroup( $project_name, $project_name . "-group2", '/dir1', 1, 1 );
+		$this->_checkRightsOnPathForGroup( $project_name, $project_name . "-group3", '/dir1', 0, 0 );
+
+		$this->_checkRepoStructureTemplate1( $project_name );
+	}
+	
+	public function testCreateProjectFromTemplateWithAdminWithAccessFileButUnexistingPredefinedGroup()
+	{
+		// Setup
+		$project_name = 'TestProject';
+		$template_name = "Template1";
+		$extra_group = "TestGroup";
+		
+		$this->_setupTemplateRepo( true, ', "#'.$extra_group.'": "rw"' );
+
+		// Exercise
+		try
+		{
+			$project = USVN_Project::createProjectFromTemplate( array( 'projects_name' => $project_name, 'projects_start_date' => '1984-12-03 00:00:00' ),
+						$this->_user->users_login, $template_name, true, true );
+		}
+		
+		// Verify
+		catch( USVN_Exception $e )
+		{
+			// Exception thrown as expected
+			$this->assertEquals( "Pre-defined group $extra_group doesn't exist.", $e->getMessage(), "Wrong exception thrown" );
+			return;
+		}
+		$this->fail( "The project creation should have failed" );
 	}
 }
 
