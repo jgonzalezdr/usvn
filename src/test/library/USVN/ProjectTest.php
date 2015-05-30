@@ -24,9 +24,6 @@ if( !defined( "PHPUnit_MAIN_METHOD" ) )
 	define( "PHPUnit_MAIN_METHOD", "USVN_ProjectsTest::main" );
 }
 
-require_once "PHPUnit/Framework/TestCase.php";
-require_once "PHPUnit/Framework/TestSuite.php";
-
 require_once 'app/install/install.includes.php';
 
 /**

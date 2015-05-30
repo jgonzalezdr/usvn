@@ -17,8 +17,6 @@
  *
  * $Id: DB.php 1014 2007-07-11 13:26:14Z duponc_j $
  */
-require_once "PHPUnit/Framework/TestCase.php";
-require_once "PHPUnit/Framework/TestSuite.php";
 
 require_once 'library/USVN/autoload.php';
 

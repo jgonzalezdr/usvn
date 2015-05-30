@@ -16,8 +16,6 @@
  *
  * $Id: Test.php 1536 2008-11-01 16:08:37Z duponc_j $
  */
-require_once "PHPUnit/Framework/TestCase.php";
-require_once "PHPUnit/Framework/TestSuite.php";
 
 require_once 'app/install/install.includes.php';
 
