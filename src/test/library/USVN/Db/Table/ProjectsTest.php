@@ -109,7 +109,7 @@ class USVN_Db_Table_ProjectsTest extends USVN_Test_DBTestCase {
 			$_id = $obj->save();
 		}
 		catch (USVN_Exception $e) {
-			$this->assertContains("Empty project name", $e->getMessage());
+			$this->assertContains("The project's name is empty", $e->getMessage());
 			return;
 		}
 		$this->fail("Il n'y a pas eu d'exception pour un mauvais nom...");
@@ -124,7 +124,7 @@ class USVN_Db_Table_ProjectsTest extends USVN_Test_DBTestCase {
 			$id = $obj->save();
 		}
 		catch (USVN_Exception $e) {
-			$this->assertContains("Empty project name", $e->getMessage());
+			$this->assertContains("The project's name is empty", $e->getMessage());
 			return;
 		}
 		$this->fail("Il n'y a pas eu d'exception pour un mauvais nom...");
@@ -139,7 +139,7 @@ class USVN_Db_Table_ProjectsTest extends USVN_Test_DBTestCase {
 			$id = $obj->save();
 		}
 		catch (USVN_Exception $e) {
-			$this->assertContains("Invalid project name", $e->getMessage());
+			$this->assertContains("The project's name is invalid", $e->getMessage());
 			return;
 		}
 		$this->fail("Il n'y a pas eu d'exception pour un mauvais nom...");

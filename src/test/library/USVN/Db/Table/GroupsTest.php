@@ -49,7 +49,7 @@ class USVN_Db_Table_GroupsTest extends USVN_Test_DBTestCase {
 			$id = $obj->save();
 		}
 		catch (USVN_Exception $e) {
-			$this->assertContains("The group name is empty", $e->getMessage());
+			$this->assertContains("The group's name is empty", $e->getMessage());
 			return;
 		}
 		$this->fail();
@@ -64,7 +64,7 @@ class USVN_Db_Table_GroupsTest extends USVN_Test_DBTestCase {
 			$id = $obj->save();
 		}
 		catch (USVN_Exception $e) {
-			$this->assertContains("The group name is empty", $e->getMessage());
+			$this->assertContains("The group's name is empty", $e->getMessage());
 			return;
 		}
 		$this->fail();
@@ -79,7 +79,7 @@ class USVN_Db_Table_GroupsTest extends USVN_Test_DBTestCase {
 			$id = $obj->save();
 		}
 		catch (USVN_Exception $e) {
-			$this->assertContains("Invalid group name", $e->getMessage());
+			$this->assertContains("The group's name is invalid", $e->getMessage());
 			return;
 		}
 		$this->fail();
@@ -94,7 +94,7 @@ class USVN_Db_Table_GroupsTest extends USVN_Test_DBTestCase {
 			$id = $obj->save();
 		}
 		catch (USVN_Exception $e) {
-			$this->assertContains("Invalid group name", $e->getMessage());
+			$this->assertContains("The group's name is invalid", $e->getMessage());
 			return;
 		}
 		$this->fail();
@@ -121,7 +121,7 @@ class USVN_Db_Table_GroupsTest extends USVN_Test_DBTestCase {
 			$id = $obj->save();
 		}
 		catch (USVN_Exception $e) {
-			$this->assertContains("The group name is empty", $e->getMessage());
+			$this->assertContains("The group's name is empty", $e->getMessage());
 			return;
 		}
 		$this->fail();
