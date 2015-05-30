@@ -30,9 +30,8 @@ require_once 'app/install/install.includes.php';
  */
 class USVN_Db_Table_GroupsTest extends USVN_Test_DBTestCase {
 
-    public static function main() {
-        require_once "PHPUnit/TextUI/TestRunner.php";
-
+    public static function main() 
+	{
         $suite  = new PHPUnit_Framework_TestSuite("USVN_Db_Table_GroupsTest");
         $result = PHPUnit_TextUI_TestRunner::run($suite);
     }

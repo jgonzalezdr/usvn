@@ -41,9 +41,8 @@ class USVN_SVNUtilsTest extends USVN_Test_TestCase {
      * @access public
      * @static
      */
-    public static function main() {
-        require_once "PHPUnit/TextUI/TestRunner.php";
-
+    public static function main() 
+	{
         $suite  = new PHPUnit_Framework_TestSuite("USVN_SVNUtilsTest");
         $result = PHPUnit_TextUI_TestRunner::run($suite);
     }
