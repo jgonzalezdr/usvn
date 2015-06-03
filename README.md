@@ -2,7 +2,7 @@ User-friendly SVN
 ================
 
 Travis Linux build status:
-[![Build Status](https://travis-ci.org/jgonzalez/usvn.png?branch=master)](https://travis-ci.org/jgonzalez/usvn)
+[![Build Status](https://travis-ci.org/jgonzalezdr/usvn.png?branch=master)](https://travis-ci.org/jgonzalezdr/usvn)
 
 ### Important links
  * Official website: http://www.usvn.info
