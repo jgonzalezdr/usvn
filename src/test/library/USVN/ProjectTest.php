@@ -384,6 +384,11 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 	{
 		// Setup
 		$project_name = 'TestProject';
+		$non_related_group_name = 'TestGroup';
+		
+		$table_groups = new USVN_Db_Table_Groups();
+		$non_related_group = $table_groups->createRow( array( "groups_name" => $non_related_group_name ) );
+		$non_related_group->save();
 
 		USVN_Project::createProject( array( 'projects_name' => $project_name, 'projects_start_date' => '1984-12-03 00:00:00' ),
 				$this->_user->users_login, true, true, true, false );
@@ -395,8 +400,8 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		$table_projects = new USVN_Db_Table_Projects();
 		$this->assertFalse( $table_projects->isAProject( $project_name ), "The project hasn't been deleted" );
 
-		$table_groups = new USVN_Db_Table_Groups();
 		$this->assertFalse( $table_groups->isAGroup( $project_name ), "The project group hasn't been deleted" );
+		$this->assertTrue( $table_groups->isAGroup( $non_related_group_name ), "The non-related group has been deleted" );
 
 		$this->assertFalse( USVN_SVNUtils::isSVNRepository( self::REPOS_PATH . '/' . $project_name ), "The SVN repository hasn't been deleted" );
 	}
@@ -675,6 +680,35 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 			return;
 		}
 		$this->fail( "The project creation should have failed" );
+	}
+	
+	public function testDeleteProjectCreatedFromTemplate()
+	{
+		// Setup
+		$project_name = 'TestProject';
+		$template_name = "Template1";
+		$non_related_group_name = 'TestGroup';
+		
+		$this->_setupTemplateRepo( false );
+
+		$table_groups = new USVN_Db_Table_Groups();
+		$non_related_group = $table_groups->createRow( array( "groups_name" => $non_related_group_name ) );
+		$non_related_group->save();
+
+		USVN_Project::createProjectFromTemplate( array( 'projects_name' => $project_name, 'projects_start_date' => '1984-12-03 00:00:00' ),
+				$this->_user->users_login, $template_name, true, true );
+
+		// Exercise
+		USVN_Project::deleteProject( $project_name );
+
+		// Verify
+		$table_projects = new USVN_Db_Table_Projects();
+		$this->assertFalse( $table_projects->isAProject( $project_name ), "The project hasn't been deleted" );
+
+		$this->assertCount( 0, $table_groups->allGroupsLike( $project_name ), "The project groups haven't been deleted" );
+		$this->assertTrue( $table_groups->isAGroup( $non_related_group_name ), "The non-related group has been deleted" );
+
+		$this->assertFalse( USVN_SVNUtils::isSVNRepository( self::REPOS_PATH . '/' . $project_name ), "The SVN repository hasn't been deleted" );
 	}
 }
 

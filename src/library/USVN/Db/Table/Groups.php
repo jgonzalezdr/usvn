@@ -203,6 +203,23 @@ class USVN_Db_Table_Groups extends USVN_Db_TableAuthz {
 		$where = $db->quoteInto("groups_name like ?", $match_group."%");
 		return $this->fetchAll($where, "groups_name");
 	}
+	
+	/**
+	 * Return all groups related to a project (by their names)
+	 * 
+	 * @param string $project_name Name of the project
+	 * @return Zend_Db_Table_Rowset Matching groups
+	 */
+	public function findGroupsRelatedToProject( $project_name )
+	{
+		$db = $this->getAdapter();
+		
+		$quoted_group_simple = $db->quote( $project_name );
+		$quoted_group_wildcard = $db->quote( "$project_name-%" );
+
+		$where = "groups_name = $quoted_group_simple OR groups_name LIKE $quoted_group_wildcard";
+		return $this->fetchAll($where);
+	}
 
 	public function allLeader($group_id)
 	{
