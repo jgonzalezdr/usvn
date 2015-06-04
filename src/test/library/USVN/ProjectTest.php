@@ -24,7 +24,7 @@ if( !defined( "PHPUnit_MAIN_METHOD" ) )
 	define( "PHPUnit_MAIN_METHOD", "USVN_ProjectsTest::main" );
 }
 
-require_once 'app/install/install.includes.php';
+require_once 'test/TestSetup.php';
 
 /**
  * @coversDefaultClass USVN_Projects
@@ -56,7 +56,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 
 	private function _checkSVNRepositoryExists( $project_name )
 	{
-		$this->assertTrue( USVN_SVNUtils::isSVNRepository( self::REPOS_PATH . '/' . $project_name ), "The SVN repository hasn't been created" );
+		$this->assertTrue( USVN_SVNUtils::isSVNRepository( TEST_REPOS_PATH . '/' . $project_name ), "The SVN repository hasn't been created" );
 	}
 
 	private function _checkReturnedProject( $project_name, $project )
@@ -126,7 +126,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 
 	private function _checkRepoStructureEmptyDir( $project_name )
 	{
-		$this->assertEquals( 0, count( USVN_SVNUtils::listSVN( self::REPOS_PATH . '/' . $project_name, '/' ) ) );
+		$this->assertEquals( 0, count( USVN_SVNUtils::listSVN( TEST_REPOS_PATH . '/' . $project_name, '/' ) ) );
 	}
 
 	private function _checkRepoStructureStdDir( $project_name )
@@ -147,7 +147,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 				'isDirectory' => true,
 				'path' => '/trunk/'
 			) );
-		$this->assertEquals( $expected_svn_list, USVN_SVNUtils::listSVN( self::REPOS_PATH . '/' . $project_name, '/' ) );
+		$this->assertEquals( $expected_svn_list, USVN_SVNUtils::listSVN( TEST_REPOS_PATH . '/' . $project_name, '/' ) );
 	}
 
 	public function testCreateProjectWithMultiDirectoryOk()
@@ -403,7 +403,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		$this->assertFalse( $table_groups->isAGroup( $project_name ), "The project group hasn't been deleted" );
 		$this->assertTrue( $table_groups->isAGroup( $non_related_group_name ), "The non-related group has been deleted" );
 
-		$this->assertFalse( USVN_SVNUtils::isSVNRepository( self::REPOS_PATH . '/' . $project_name ), "The SVN repository hasn't been deleted" );
+		$this->assertFalse( USVN_SVNUtils::isSVNRepository( TEST_REPOS_PATH . '/' . $project_name ), "The SVN repository hasn't been deleted" );
 	}
 
 	public function testDeleteProjectNotExisting()
@@ -435,7 +435,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 	 */
     private function _svnImport( $repository, $path )
     {
-        $repository_url = USVN_SVNUtils::getRepositoryFileUrl( self::REPOS_PATH . "/" . $repository );
+        $repository_url = USVN_SVNUtils::getRepositoryFileUrl( TEST_REPOS_PATH . "/" . $repository );
         $escaped_path = escapeshellarg( $path );
         $cmd = USVN_SVNUtils::svnCommand( "import --non-interactive --username USVN -m \"" . T_("Commit by USVN") ."\" $escaped_path $repository_url" );
 		$message = USVN_ConsoleUtils::runCmdCaptureMessage($cmd, $return);
@@ -471,7 +471,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		USVN_Project::createProject( array( 'projects_name' => $templates_repo_name, 'projects_start_date' => '1984-12-03 00:00:00' ),
 				$this->_user->users_login, true, true, true, false );
 
-		$wc_path = self::TESTING_DIR . "/" . $templates_repo_name . "WC";
+		$wc_path = TESTING_DIR . "/" . $templates_repo_name . "WC";
 		mkdir( $wc_path );
 		mkdir( $wc_path . "/Template1" );
 		mkdir( $wc_path . "/Template1/dir1" );
@@ -489,8 +489,8 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		
 		$this->_svnImport( $templates_repo_name, $wc_path );
 
-		file_put_contents( CONFIG_FILE, 'projectTemplates.repoName = "' . $templates_repo_name . '"', FILE_APPEND );
-		$config = new USVN_Config_Ini( CONFIG_FILE, USVN_CONFIG_SECTION );
+		file_put_contents( USVN_CONFIG_FILE, 'projectTemplates.repoName = "' . $templates_repo_name . '"', FILE_APPEND );
+		$config = new USVN_Config_Ini( USVN_CONFIG_FILE, USVN_CONFIG_SECTION );
 		Zend_Registry::set( 'config', $config );
 	}
 
@@ -512,7 +512,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 				'isDirectory' => true,
 				'path' => '/dir3/'
 			) );
-		$this->assertEquals( $expected_svn_list, USVN_SVNUtils::listSVN( self::REPOS_PATH . '/' . $project_name, '/' ) );
+		$this->assertEquals( $expected_svn_list, USVN_SVNUtils::listSVN( TEST_REPOS_PATH . '/' . $project_name, '/' ) );
 	}
 
 	public function testCreateProjectFromTemplateWithAdmin()
@@ -708,7 +708,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		$this->assertCount( 0, $table_groups->allGroupsLike( $project_name ), "The project groups haven't been deleted" );
 		$this->assertTrue( $table_groups->isAGroup( $non_related_group_name ), "The non-related group has been deleted" );
 
-		$this->assertFalse( USVN_SVNUtils::isSVNRepository( self::REPOS_PATH . '/' . $project_name ), "The SVN repository hasn't been deleted" );
+		$this->assertFalse( USVN_SVNUtils::isSVNRepository( TEST_REPOS_PATH . '/' . $project_name ), "The SVN repository hasn't been deleted" );
 	}
 }
 

@@ -33,7 +33,15 @@ class USVN_Translation
 	{
 		self::$language = $language;
 		self::$locale_directory = $locale_directory;
-		self::$translation_instance = new Zend_Translate('gettext', "$locale_directory/$language/messages.mo", $language, array('disableNotices' => true));
+		if( empty( $language ) || empty( $locale_directory ) )
+		{
+			self::$translation_instance = null;
+		}
+		else
+		{
+			self::$translation_instance = new Zend_Translate( 'gettext', "$locale_directory/$language/messages.mo", $language,
+															  array('disableNotices' => true) );
+		}
 	}
 
 	/**
@@ -91,7 +99,7 @@ class USVN_Translation
 	* @param string
 	* @return string
 	*/
-	public static function  _($str)
+	public static function _($str)
 	{
 		if( self::$translation_instance )
 		{

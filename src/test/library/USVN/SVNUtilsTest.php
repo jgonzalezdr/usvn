@@ -23,12 +23,13 @@ if (!defined("PHPUnit_MAIN_METHOD")) {
     define("PHPUnit_MAIN_METHOD", "USVN_SVNUtilsTest::main");
 }
 
-require_once 'app/install/install.includes.php';
+require_once 'test/TestSetup.php';
 
 /**
  * @coversDefaultClass USVN_SVNUtils
  */
-class USVN_SVNUtilsTest extends USVN_Test_TestCase {
+class USVN_SVNUtilsTest extends USVN_Test_TestCase
+{
 	private $savedHome;
 	
 	private $fakeHome;
@@ -52,7 +53,7 @@ class USVN_SVNUtilsTest extends USVN_Test_TestCase {
 	*
 	* @param string Path to create directory structs
 	*/
-	protected static function createSvnDirectoryStruct( $path )
+	protected function createSvnDirectoryStruct( $path )
 	{
 		@mkdir( $path);
 		@mkdir( $path . "/hooks" );
@@ -66,16 +67,16 @@ class USVN_SVNUtilsTest extends USVN_Test_TestCase {
     {
 		parent::setUp();
 
-		$this->fakeHome = self::TESTING_DIR . '/fakehome';
-		$this->testRepoPath = self::REPOS_PATH . '/TestRepo';
-		$this->fakeRepoPath = self::REPOS_PATH . '/FakeRepo';
+		$this->fakeHome = TESTING_DIR . '/fakehome';
+		$this->testRepoPath = TEST_REPOS_PATH . '/TestRepo';
+		$this->fakeRepoPath = TEST_REPOS_PATH . '/FakeRepo';
 
 		mkdir( $this->fakeHome );
 		chmod( $this->fakeHome, 0000 );
 		$this->savedHome = getenv("HOME");
 		putenv( 'HOME=' . $this->fakeHome );
 		
-        self::createSvnDirectoryStruct( $this->testRepoPath );
+        $this->createSvnDirectoryStruct( $this->testRepoPath );
 		
         mkdir( $this->fakeRepoPath );
     }

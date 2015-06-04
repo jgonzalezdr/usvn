@@ -23,13 +23,13 @@ if (!defined("PHPUnit_MAIN_METHOD")) {
     define("PHPUnit_MAIN_METHOD", "USVN_Db_Table_GroupsTest::main");
 }
 
-require_once 'app/install/install.includes.php';
+require_once 'test/TestSetup.php';
 
 /**
  * @coversDefaultClass USVN_Db_Table_Groups
  */
-class USVN_Db_Table_GroupsTest extends USVN_Test_DBTestCase {
-
+class USVN_Db_Table_GroupsTest extends USVN_Test_DBTestCase
+{
     public static function main() 
 	{
         $suite  = new PHPUnit_Framework_TestSuite("USVN_Db_Table_GroupsTest");

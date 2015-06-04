@@ -18,17 +18,18 @@
  * $Id: DB.php 1536 2008-11-01 16:08:37Z duponc_j $
  */
 
-require_once 'app/install/install.includes.php';
+require_once 'test/TestSetup.php';
 
-abstract class USVN_Test_DBTestCase extends USVN_Test_TestCase {
-	
-	const DB_INI_FILE = 'tests/db.ini';
-	const DB_HOST = 'localhost';
-	const DB_NAME = 'usvn-test';
-	const DB_USERNAME = 'usvn-test';
-	const DB_PASSWORD = 'usvn-test';
-	const DB_SQLITE_FILE = 'tests/usvn-test.db';
-	const DB_PREFIX = 'usvn_';
+define( 'TEST_DB_INI_FILE',      USVN_CONFIG_DIR.'/db.ini' );
+define( 'TEST_DB_HOST',          'localhost' );
+define( 'TEST_DB_NAME',          'usvn-test' );
+define( 'TEST_DB_USERNAME',      'usvn-test' );
+define( 'TEST_DB_PASSWORD',      'usvn-test' );
+define( 'TEST_DB_SQLITE_FILE',   TESTING_DIR.'/usvn-test.sqlite' );
+define( 'TEST_DB_PREFIX',        'usvn_' );
+
+abstract class USVN_Test_DBTestCase extends USVN_Test_TestCase
+{
 	
 	protected $db;
 
@@ -36,49 +37,49 @@ abstract class USVN_Test_DBTestCase extends USVN_Test_TestCase {
 	{
 		parent::setUp();
 		
-		$params = array ( 'host' => self::DB_HOST,
-						  'username' => self::DB_USERNAME,
-						  'password' => self::DB_PASSWORD );
+		$params = array ( 'host' => TEST_DB_HOST,
+						  'username' => TEST_DB_USERNAME,
+						  'password' => TEST_DB_PASSWORD );
 		
 		if (getenv('DB') == "PDO_SQLITE" || getenv('DB') === false) 
 		{
-			$params['dbname'] = self::DB_SQLITE_FILE;
-			$config_dbname = getcwd() . '/' . self::DB_SQLITE_FILE;
+			$params['dbname'] = TEST_DB_SQLITE_FILE;
+			$config_dbname = USVN_BASE_DIR . '/' . TEST_DB_SQLITE_FILE;
 			$dbtype = "PDO_SQLITE";
 		}
 		else
 		{
-			$params['dbname'] = self::DB_NAME;
-			$config_dbname = self::DB_NAME;
+			$params['dbname'] = TEST_DB_NAME;
+			$config_dbname = TEST_DB_NAME;
 			$dbtype = getenv('DB');
 		}
 			
 		$this->db = Zend_Db::factory( $dbtype, $params );
 		$this->_clean();
-		Install::installDb( self::DB_INI_FILE, dirname(__FILE__) . '/../../../../library/SQL/', 
+		Install::installDb( TEST_DB_INI_FILE, USVN_LIB_DIR.'/SQL',
 							$params['host'], $params['username'], $params['password'], 
-							$params['dbname'], self::DB_PREFIX, $dbtype, false );
+							$params['dbname'], TEST_DB_PREFIX, $dbtype, false );
 		Zend_Db_Table::setDefaultAdapter($this->db);
-		USVN_Db_Table::$prefix = self::DB_PREFIX;
+		USVN_Db_Table::$prefix = TEST_DB_PREFIX;
 
-		file_put_contents( CONFIG_FILE, '
+		file_put_contents( USVN_CONFIG_FILE, '
 database.adapterName = "PDO_SQLITE"
-database.prefix = "' . self::DB_PREFIX . '"
+database.prefix = "' . TEST_DB_PREFIX . '"
 database.options.host = "' . $params['host'] . '"
 database.options.username = "' . $params['username'] . '"
 database.options.password = "' . $params['password'] . '"
 database.options.dbname = "' . $config_dbname . '"
 ', FILE_APPEND);
 
-		$config = new USVN_Config_Ini( CONFIG_FILE, USVN_CONFIG_SECTION );
+		$config = new USVN_Config_Ini( USVN_CONFIG_FILE, USVN_CONFIG_SECTION );
 		Zend_Registry::set( 'config', $config );
     }
 
 	protected function _clean()
 	{
 		if (getenv('DB') == "PDO_SQLITE" || getenv('DB') === false) {
-			if (file_exists( self::DB_SQLITE_FILE )) {
-				@unlink( self::DB_SQLITE_FILE );
+			if (file_exists( TESTING_DIR.'/'.TEST_DB_SQLITE_FILE )) {
+				@unlink( TESTING_DIR.'/'.TEST_DB_SQLITE_FILE );
 			}
 		}
 		else {
@@ -97,7 +98,8 @@ database.options.dbname = "' . $config_dbname . '"
 		parent::tearDown();
     }
 
-    public function __destruct() {
+    public function __destruct()
+	{
         if ($this->db != null) {
             $this->db->closeConnection();
         }

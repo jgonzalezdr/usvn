@@ -17,56 +17,59 @@
  * $Id: Test.php 1536 2008-11-01 16:08:37Z duponc_j $
  */
 
-require_once 'app/install/install.includes.php';
+require_once 'test/TestSetup.php';
 
-define('USVN_URL_SEP', ':');
-define('CONFIG_FILE', 'tests/test.ini');
+define( 'UTEST_SVN_URL_SEP',   ':' );
+define( 'TEST_USVN_PATH',      TESTING_DIR."/usvn" );
+define( 'TEST_REPOS_PATH',     TEST_USVN_PATH."/svn" );
+define( 'TEST_SVN_URL',        "http://localhost/" );
 
-abstract class USVN_Test_TestCase extends PHPUnit_Framework_TestCase {
+abstract class USVN_Test_TestCase extends PHPUnit_Framework_TestCase 
+{
     private $_path;
 	
-	const TESTING_DIR = "tests";
-	const USVN_PATH = "tests/usvn";
-	const REPOS_PATH = "tests/usvn/svn";
-	const SVN_URL = "http://localhost/";
-
-    protected function setUp() {
+    protected function setUp()
+	{
         error_reporting(E_ALL | E_STRICT);
         date_default_timezone_set('UTC');
         $this->_path = getcwd();
 		$this->setConsoleLocale();
-		//USVN_Translation::initTranslation('en_TEST', 'app/locale'); // Don't translate
 		
-		USVN_DirectoryUtils::removeDirectory(self::TESTING_DIR.'/');
-		mkdir(self::TESTING_DIR);
-		mkdir(self::USVN_PATH);
-		mkdir(self::REPOS_PATH);
+		USVN_DirectoryUtils::removeDirectory( TESTING_DIR.'/' );
+		mkdir( TESTING_DIR );
+		mkdir( USVN_CONFIG_DIR );
+		mkdir( TEST_USVN_PATH );
+		mkdir( TEST_REPOS_PATH );
 		
-		file_put_contents(CONFIG_FILE, '[general]
-subversion.path = "' . getcwd() . '/' . self::USVN_PATH . '"
-subversion.passwd = "' . getcwd() . '/' . self::USVN_PATH . '/htpasswd"
-subversion.authz = "' . getcwd() . '/' . self::USVN_PATH . '/authz"
-subversion.url = "' . self::SVN_URL . '"
+		file_put_contents( USVN_CONFIG_FILE, '['.USVN_CONFIG_SECTION.']
+subversion.path = "' . getcwd() . '/' . TEST_USVN_PATH . '"
+subversion.passwd = "' . getcwd() . '/' . TEST_USVN_PATH . '/htpasswd"
+subversion.authz = "' . getcwd() . '/' . TEST_USVN_PATH . '/authz"
+subversion.url = "' . TEST_SVN_URL . '"
 version = "0.8.4"
 translation.locale = "en_US"
 ');
-		$config = new USVN_Config_Ini( CONFIG_FILE, USVN_CONFIG_SECTION );
+		$config = new USVN_Config_Ini( USVN_CONFIG_FILE, USVN_CONFIG_SECTION );
 		Zend_Registry::set( 'config', $config );
+
+		USVN_Translation::initTranslation( null, 'app/locale' ); // Don't translate
     }
 
-    protected function tearDown() {
+    protected function tearDown()
+	{
         chdir($this->_path);
     }
 
 	private function setConsoleLocale()
 	{
-		if (PHP_OS == "Linux") {
+		if (PHP_OS == "Linux")
+		{
 			USVN_ConsoleUtils::setLocale("en_US.utf8");
 		}
-		else {
+		else
+		{
 			USVN_ConsoleUtils::setLocale("en_US.UTF-8");
 		}
 	}
 }
 
-?>

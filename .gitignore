@@ -9,5 +9,5 @@ Thumbs.db
 *.swp
 .htaccess
 config.ini
-/src/nbproject/private/
-/src/tests/
+/src/tmp_testing/
+

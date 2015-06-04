@@ -72,7 +72,7 @@ class USVN_DirectoryUtils
 		$res = array();
 		$dh = opendir($path);
 		if (!$dh) {
-			throw new USVN_Exception(T_("Can't read directory %s.", $path));
+			throw new USVN_Exception(T_("Can't read directory %s."), $path);
 		}
 		while (($subDir = readdir($dh)) !== false) {
             if ($subDir != '.' && $subDir != '..' && $subDir != '.svn') {

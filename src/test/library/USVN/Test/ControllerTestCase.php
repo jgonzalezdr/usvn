@@ -18,7 +18,7 @@
  * $Id: DB.php 1014 2007-07-11 13:26:14Z duponc_j $
  */
 
-require_once 'library/USVN/autoload.php';
+require_once 'test/TestSetup.php';
 
 define('USVN_VIEWS_DIR', 'www/views/');
 define('USVN_HELPERS_DIR', 'www/helpers/');
@@ -27,7 +27,8 @@ define('USVN_CONFIG_SECTION', 'general');
 define('USVN_ROUTES_CONFIG_FILE', 'www/USVN/routes.ini');
 
 
-class USVN_Test_Controller extends USVN_Test_DBTestCase {
+class USVN_Test_ControllerTestCase extends USVN_Test_DBTestCase
+{
 	/* To be overload */
 	protected $controller_name;
 	protected $controller_class;
@@ -39,7 +40,8 @@ class USVN_Test_Controller extends USVN_Test_DBTestCase {
 	protected $user;
 	protected $admin_user;
 
-    protected function setUp() {
+    protected function setUp()
+	{
 		parent::setUp();
 
 

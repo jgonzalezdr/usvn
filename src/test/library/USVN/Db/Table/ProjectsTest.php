@@ -23,13 +23,13 @@ if (!defined("PHPUnit_MAIN_METHOD")) {
 	define("PHPUnit_MAIN_METHOD", "USVN_Db_Table_ProjectsTest::main");
 }
 
-require_once 'app/install/install.includes.php';
+require_once 'test/TestSetup.php';
 
 /**
  * @coversDefaultClass USVN_Db_Table_Projects
  */
-class USVN_Db_Table_ProjectsTest extends USVN_Test_DBTestCase {
-
+class USVN_Db_Table_ProjectsTest extends USVN_Test_DBTestCase
+{
 	public static function main() 
 	{
 		$suite  = new PHPUnit_Framework_TestSuite("USVN_Db_Table_ProjectsTest");
@@ -85,7 +85,7 @@ class USVN_Db_Table_ProjectsTest extends USVN_Test_DBTestCase {
 
 	public function testInsertProjectOkSVNAlreadyExist()
 	{
-		USVN_SVNUtils::createSVN( self::REPOS_PATH . '/InsertProjectOk' );
+		USVN_SVNUtils::createSVN( TEST_REPOS_PATH . '/InsertProjectOk' );
 
 		$table = new USVN_Db_Table_Projects();
 		$project = $table->fetchNew();
@@ -93,7 +93,7 @@ class USVN_Db_Table_ProjectsTest extends USVN_Test_DBTestCase {
 		$project->save();
 
 		$this->assertTrue( $table->isAProject('InsertProjectOk'), "The project has not been created" );
-		$this->assertTrue( USVN_SVNUtils::isSVNRepository( self::REPOS_PATH . '/InsertProjectOk'), "The SVN repository has not been created" );
+		$this->assertTrue( USVN_SVNUtils::isSVNRepository( TEST_REPOS_PATH . '/InsertProjectOk'), "The SVN repository has not been created" );
 	}
 
 	public function testInsertProjectNoName()

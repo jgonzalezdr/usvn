@@ -18,7 +18,9 @@
  * $Id: DB.php 1014 2007-07-11 13:26:14Z duponc_j $
  */
 
-class USVN_Test_AdminController extends USVN_Test_Controller
+require_once 'test/TestSetup.php';
+
+class USVN_Test_AdminControllerTestCase extends USVN_Test_ControllerTestCase
 {
 	protected function setUp()
 	{
