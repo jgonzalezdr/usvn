@@ -37,7 +37,7 @@ class USVN_Db_Table_UsersTest extends USVN_Test_DBTestCase
         $result = PHPUnit_TextUI_TestRunner::run($suite);
     }
 
-    public function testUserInsertNoLogin()
+    public function test_UserInsert_NoLogin()
 	{
 		$table = new USVN_Db_Table_Users();
 		$obj = $table->fetchNew();
@@ -56,7 +56,7 @@ class USVN_Db_Table_UsersTest extends USVN_Test_DBTestCase
 		$this->fail();
 	}
 
-    public function testUserInsertInvalidEmailAddress()
+    public function test_UserInsert_InvalidEmailAddress()
 	{
 		$table = new USVN_Db_Table_Users();
 		$obj = $table->fetchNew();
@@ -76,7 +76,7 @@ class USVN_Db_Table_UsersTest extends USVN_Test_DBTestCase
 		$this->fail();
     }
 
-    public function testUserInsertNoPassword()
+    public function test_UserInsert_NoPassword()
 	{
 		$table = new USVN_Db_Table_Users();
 		$obj = $table->fetchNew();
@@ -96,7 +96,7 @@ class USVN_Db_Table_UsersTest extends USVN_Test_DBTestCase
 		$this->fail();
     }
 
-    public function testUserInsertNoPassword2()
+    public function test_UserInsert_NoPassword2()
 	{
 		$table = new USVN_Db_Table_Users();
 		$obj = $table->fetchNew();
@@ -116,7 +116,7 @@ class USVN_Db_Table_UsersTest extends USVN_Test_DBTestCase
 		$this->fail();
     }
 
-    public function testUserInsertInvalidPassword()
+    public function test_UserInsert_InvalidPassword()
 	{
 		$this->markTestSkipped( "Password is not checked any more?" );
 
@@ -138,7 +138,7 @@ class USVN_Db_Table_UsersTest extends USVN_Test_DBTestCase
 		$this->fail();
     }
 
-    public function testUserInsertOk()
+    public function test_UserInsert_Ok()
     {
     	$table = new USVN_Db_Table_Users();
 		$obj = $table->fetchNew();
@@ -151,7 +151,7 @@ class USVN_Db_Table_UsersTest extends USVN_Test_DBTestCase
 		$this->assertTrue($table->isAUser('InsertOk'));
     }
 
-    public function testUserUpdateNoLogin()
+    public function test_UserUpdate_NoLogin()
 	{
     	$table = new USVN_Db_Table_Users();
 		$obj = $table->fetchNew();
@@ -177,7 +177,7 @@ class USVN_Db_Table_UsersTest extends USVN_Test_DBTestCase
 		$this->assertTrue($table->isAUser('InsertOkUpdateNoLogin'));
     }
 
-    public function testUserUpdateInvalidEmailAddress()
+    public function test_UserUpdate_InvalidEmailAddress()
 	{
 		$table = new USVN_Db_Table_Users();
 		$obj = $table->fetchNew();
@@ -204,7 +204,7 @@ class USVN_Db_Table_UsersTest extends USVN_Test_DBTestCase
 		$this->assertTrue(USVN_Crypt::checkPassword('password', $user->password));
     }
 
-    public function testUserUpdateNoPassword()
+    public function test_UserUpdate_NoPassword()
 	{
 		$table = new USVN_Db_Table_Users();
 		$obj = $table->fetchNew();
@@ -231,7 +231,7 @@ class USVN_Db_Table_UsersTest extends USVN_Test_DBTestCase
 		$this->assertTrue(USVN_Crypt::checkPassword('password', $user->password));
     }
 
-    public function testUserUpdateInvalidPassword()
+    public function test_UserUpdate_InvalidPassword()
 	{
 		$this->markTestSkipped( "Password is not checked any more?" );
 
@@ -260,7 +260,7 @@ class USVN_Db_Table_UsersTest extends USVN_Test_DBTestCase
 		$this->assertTrue(USVN_Crypt::checkPassword('password', $user->password));
     }
 
-    public function testUserUpdateOk()
+    public function test_UserUpdate_Ok()
     {
     	$table = new USVN_Db_Table_Users();
 		$obj = $table->fetchNew();
@@ -281,7 +281,7 @@ class USVN_Db_Table_UsersTest extends USVN_Test_DBTestCase
 		$this->assertTrue($table->isAUser('newUpdateOk'));
     }
 
-	public function testUserUpdateHtpasswd()
+	public function test_UserUpdate_Htpasswd()
 	{
 		$table = new USVN_Db_Table_Users();
 
@@ -297,7 +297,7 @@ class USVN_Db_Table_UsersTest extends USVN_Test_DBTestCase
 		$this->assertEquals($text, $contenu);
 	}
 
-	public function testUserUpdateHtpasswdBadPath()
+	public function test_UserUpdate_HtpasswdBadPath()
 	{
 		$configArray = array('subversion' => array('passwd' => 'titi/toto'));
 		$config = new Zend_Config($configArray);

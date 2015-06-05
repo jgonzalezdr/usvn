@@ -36,7 +36,7 @@ class USVN_Db_Table_ProjectsTest extends USVN_Test_DBTestCase
 		$result = PHPUnit_TextUI_TestRunner::run($suite);
 	}
 
-	public function testInsertProjectOk()
+	public function test_InsertProject_Ok()
 	{
 		$table = new USVN_Db_Table_Projects();
 		$project = $table->fetchNew();
@@ -46,7 +46,7 @@ class USVN_Db_Table_ProjectsTest extends USVN_Test_DBTestCase
 		$this->assertTrue( $table->isAProject('InsertProjectOk'), "The project has not been created" );
 	}
 
-	public function testInsertProjectWithMultiDirectoryOk()
+	public function test_InsertProject_WithMultiDirectory_Ok()
 	{
 		$table = new USVN_Db_Table_Projects();
 		$project = $table->fetchNew();
@@ -56,7 +56,7 @@ class USVN_Db_Table_ProjectsTest extends USVN_Test_DBTestCase
 		$this->assertTrue( $table->isAProject('test/ok/InsertProjectOk'), "The project has not been created" );
 	}
 
-	public function testInsertUserToProjects()
+	public function test_InsertUserToProjects()
 	{
 		$table = new USVN_Db_Table_Users();
 		$obj = $table->fetchNew();
@@ -83,7 +83,7 @@ class USVN_Db_Table_ProjectsTest extends USVN_Test_DBTestCase
 		$this->assertEquals(count($UserToProject->fetchRow(array('users_id = ?' => $users->users_id, 'projects_id = ?' => $projects->projects_id ))), 0);
 	}
 
-	public function testInsertProjectOkSVNAlreadyExist()
+	public function test_InsertProject_SVNAlreadyExist_Ok()
 	{
 		USVN_SVNUtils::createSVN( TEST_REPOS_PATH . '/InsertProjectOk' );
 
@@ -96,7 +96,7 @@ class USVN_Db_Table_ProjectsTest extends USVN_Test_DBTestCase
 		$this->assertTrue( USVN_SVNUtils::isSVNRepository( TEST_REPOS_PATH . '/InsertProjectOk'), "The SVN repository has not been created" );
 	}
 
-	public function testInsertProjectNoName()
+	public function test_InsertProject_NoName()
 	{
 		$table = new USVN_Db_Table_Projects();
 		$obj = $table->fetchNew();
@@ -111,7 +111,7 @@ class USVN_Db_Table_ProjectsTest extends USVN_Test_DBTestCase
 		$this->fail("Il n'y a pas eu d'exception pour un mauvais nom...");
 	}
 
-	public function testInsertProjectNoName2()
+	public function test_InsertProject_NoName2()
 	{
 		$table = new USVN_Db_Table_Projects();
 		$obj = $table->fetchNew();
@@ -126,7 +126,7 @@ class USVN_Db_Table_ProjectsTest extends USVN_Test_DBTestCase
 		$this->fail("Il n'y a pas eu d'exception pour un mauvais nom...");
 	}
 
-	public function testInsertProjectInvalidName()
+	public function test_InsertProject_InvalidName()
 	{
 		$table = new USVN_Db_Table_Projects();
 		$obj = $table->fetchNew();
@@ -141,7 +141,7 @@ class USVN_Db_Table_ProjectsTest extends USVN_Test_DBTestCase
 		$this->fail("Il n'y a pas eu d'exception pour un mauvais nom...");
 	}
 
-	public function testUpdateProject()
+	public function test_UpdateProject()
 	{
 		$table = new USVN_Db_Table_Projects();
 		$obj = $table->fetchNew();
@@ -158,7 +158,7 @@ class USVN_Db_Table_ProjectsTest extends USVN_Test_DBTestCase
 		$this->fail("Le projet a ete renomme");
 	}
 
-	public function testDeleteProject()
+	public function test_DeleteProject()
 	{
 		$table = new USVN_Db_Table_Projects();
 		$obj = $table->fetchNew();
@@ -172,7 +172,7 @@ class USVN_Db_Table_ProjectsTest extends USVN_Test_DBTestCase
 		$this->assertFalse($table->isAProject('InsertProjectOk'), "Le projet n'est pas supprime");
 	}
 
-	public function testfetchAllAssignedTo()
+	public function test_fetchAllAssignedTo()
 	{
 		$table_user = new USVN_Db_Table_Users();
 		$user = $table_user->fetchNew();
@@ -216,7 +216,7 @@ class USVN_Db_Table_ProjectsTest extends USVN_Test_DBTestCase
 	}
 
 
-	public function testfetchAllAssignedToUserInTwoGroup()
+	public function test_fetchAllAssignedToUserInTwoGroup()
 	{
 		$table_user = new USVN_Db_Table_Users();
 		$user = $table_user->fetchNew();
@@ -253,7 +253,7 @@ class USVN_Db_Table_ProjectsTest extends USVN_Test_DBTestCase
 		$this->assertEquals(count($table_project->fetchAllAssignedTo($user)), 1);
 	}
 
-	public function testfetchAllAssignedTwoUserInGroup()
+	public function test_fetchAllAssignedTwoUserInGroup()
 	{
 		$table_user = new USVN_Db_Table_Users();
 		$user = $table_user->fetchNew();
@@ -294,7 +294,7 @@ class USVN_Db_Table_ProjectsTest extends USVN_Test_DBTestCase
 		$this->assertEquals(count($table_project->fetchAllAssignedTo($user)), 1);
 	}
 
-	public function testfetchAllAssignedToAll()
+	public function test_fetchAllAssignedToAll()
 	{
 		$users = array('stem', 'noplay', 'crivis_s', 'duponc_j', 'dolean_j', 'billar_m', 'attal_m', 'joanic_g', 'guyoll_o');
 		foreach ($users as $user) {

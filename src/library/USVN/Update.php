@@ -142,6 +142,10 @@ class USVN_Update
 				// Ugly but we don't want to display error if usvn.info is not available
 				return;
 			}
+			if( $config->update == NULL )
+			{
+				$config->update = array();
+			}
 			if ($response->getStatus() == 200)
 			{
 				$config->update->availableversion = $response->getBody();

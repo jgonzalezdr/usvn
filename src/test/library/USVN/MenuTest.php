@@ -21,21 +21,14 @@ if (!defined("PHPUnit_MAIN_METHOD")) {
     define("PHPUnit_MAIN_METHOD", "USVN_MenuTest::main");
 }
 
-require_once "PHPUnit/Framework/TestCase.php";
-require_once "PHPUnit/Framework/TestSuite.php";
+require_once 'test/TestSetup.php';
 
-define('CONFIG_FILE', 'tests/config.ini');
-
-require_once 'library/USVN/autoload.php';
-
-class USVN_MenuTest extends USVN_Test_DB
+class USVN_MenuTest extends USVN_Test_DBTestCase
 {
-	private $_menudir = 'tests/menus/';
+	private $_menudir;
 
     public static function main()
 	{
-        require_once "PHPUnit/TextUI/TestRunner.php";
-
         $suite  = new PHPUnit_Framework_TestSuite("USVN_MenuTest");
         $result = PHPUnit_TextUI_TestRunner::run($suite);
     }
@@ -43,6 +36,9 @@ class USVN_MenuTest extends USVN_Test_DB
 	protected function setUp()
 	{
 		parent::setUp();
+
+		$this->_menudir = TESTING_DIR.'/menus';
+		
 		mkdir($this->_menudir);
         file_put_contents($this->_menudir . "/beta.php", '
 <?php

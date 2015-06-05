@@ -22,24 +22,24 @@ if (!defined('PHPUnit_MAIN_METHOD')) {
     define('PHPUnit_MAIN_METHOD', 'USVN_CryptTest::main');
 }
 
-require_once 'PHPUnit/Framework.php';
+require_once 'test/TestSetup.php';
 
-require_once 'library/USVN/autoload.php';
-class USVN_CryptTest extends PHPUnit_Framework_TestCase {
+class USVN_CryptTest extends USVN_Test_TestCase
+{
     /**
      * Runs the test methods of this class.
      *
      * @access public
      * @static
      */
-    public static function main() {
-        require_once 'PHPUnit/TextUI/TestRunner.php';
-
+    public static function main()
+	{
         $suite  = new PHPUnit_Framework_TestSuite('USVN_CryptTest');
         $result = PHPUnit_TextUI_TestRunner::run($suite);
     }
 
-    public function testCrypt() {
+    public function test_crypt()
+	{
         $crypt = USVN_Crypt::crypt("toto");
         $this->assertTrue( USVN_Crypt::checkPassword("toto", $crypt));
         $this->assertFalse( USVN_Crypt::checkPassword("tutu", $crypt));
@@ -48,7 +48,7 @@ class USVN_CryptTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue( USVN_Crypt::checkPassword("toto", $crypt));;
     }
 
-    public function testApr1MD5()
+    public function test_cryptApr1MD5()
     {
     	$crypt = USVN_Crypt::_cryptApr1MD5("toto", "A.IgA/..");
     	$this->assertEquals($crypt, '$apr1$A.IgA/..$vcK1pKAvkEGvAT0ob46Bw0');

@@ -42,7 +42,7 @@ class USVN_Db_Table_GroupsToProjectsTest extends USVN_Test_DBTestCase
         $result = PHPUnit_TextUI_TestRunner::run($suite);
     }
 
-    public function testAffectAndRemoveGroup()
+    public function test_AffectAndRemoveGroup()
     {
 		$table = new USVN_Db_Table_GroupsToProjects();
 		$project = $this->createProject("project");

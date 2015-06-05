@@ -50,21 +50,21 @@ class USVN_ConfigTest extends USVN_Test_TestCase
 		USVN_Translation::initTranslation('en_US', 'app/locale');
 	}
 
-    public function testSetLanguage()
+    public function test_setLanguage()
 	{
 		USVN_Config::setLanguage('fr_FR');
 		$config = new USVN_Config_Ini(USVN_CONFIG_FILE, USVN_CONFIG_SECTION);
 		$this->assertEquals('fr_FR', $config->translation->locale);
     }
 
-    public function testSetTimezone()
+    public function test_setTimezone()
 	{
 		USVN_Config::setTimezone('Europe/Paris');
 		$config = new USVN_Config_Ini(USVN_CONFIG_FILE, USVN_CONFIG_SECTION);
 		$this->assertEquals('Europe/Paris', $config->timezone);
     }
 
-    public function testSetCheckForUpdate()
+    public function test_setCheckForUpdate()
 	{
 		USVN_Config::setCheckForUpdate(true);
 		$config = new USVN_Config_Ini(USVN_CONFIG_FILE, USVN_CONFIG_SECTION);
@@ -72,7 +72,7 @@ class USVN_ConfigTest extends USVN_Test_TestCase
 		$this->assertEquals(0, $config->update->lastcheckforupdate);
 	}
 
-    public function testUnset()
+    public function test_Unset()
 	{
 		$config = new USVN_Config_Ini(USVN_CONFIG_FILE, USVN_CONFIG_SECTION);
 		unset($config->translation->locale);
@@ -81,8 +81,7 @@ class USVN_ConfigTest extends USVN_Test_TestCase
 		$this->assertFalse(isset($config->version));
     }
 
-
-    public function testSetLanguageInvalid()
+    public function test_setLanguage_Invalid()
 	{
 		try
 		{

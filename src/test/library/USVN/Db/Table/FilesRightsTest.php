@@ -68,7 +68,7 @@ class USVN_Db_Table_FileRightsTest extends USVN_Test_DBTestCase
 		));
 	}
 
-    public function testFindByPath()
+    public function test_findByPath()
     {
     	$file_rights = new USVN_Db_Table_FilesRights();
     	$this->assertInstanceOf('USVN_Db_Table_Row', $file_rights->findByPath($this->_projectid1, "/"));

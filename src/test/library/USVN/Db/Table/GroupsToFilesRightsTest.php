@@ -74,7 +74,7 @@ class USVN_Db_Table_GroupsToFilesRightsTest extends USVN_Test_DBTestCase
 		$this->_groupid2 = $group->save();
     }
 
-    public function testFindByIdRightsAndIdGroup()
+    public function test_findByIdRightsAndIdGroup()
     {
 		$table_files = new USVN_Db_Table_FilesRights();
     	$fileid = $table_files->insert(array(

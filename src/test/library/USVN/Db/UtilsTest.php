@@ -130,7 +130,7 @@ class USVN_Db_UtilsTest extends PHPUnit_Framework_TestCase
 		unlink($this->testfile);
 	}
 
-	public function testLoadFile()
+	public function test_loadFile()
 	{
 		USVN_Db_Utils::loadFile($this->db, $this->testfile);
 		$list_tables =  $this->db->listTables();
@@ -139,7 +139,7 @@ class USVN_Db_UtilsTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue(in_array('usvn_groups', $list_tables));
 	}
 
-	public function testLoadFileWithAnotherPrefix()
+	public function test_loadFile_WithAnotherPrefix()
 	{
 		USVN_Db_Table::$prefix = "fake_";
 		USVN_Db_Utils::loadFile($this->db, $this->testfile);
@@ -149,7 +149,7 @@ class USVN_Db_UtilsTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue(in_array('fake_groups', $list_tables));
 	}
 
-	public function testDeleteAllTables()
+	public function test_deleteAllTables()
 	{
 		USVN_Db_Utils::loadFile($this->db, $this->testfile);
 		$this->assertEquals(3, sizeof($this->db->listTables()));

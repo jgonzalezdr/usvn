@@ -46,7 +46,7 @@ class USVN_Db_Table_UsersToGroupsTest extends USVN_Test_DBTestCase
         $result = PHPUnit_TextUI_TestRunner::run($suite);
     }
 
-    public function testNoLeaderFindByGroupId()
+    public function test_noLeaderFindByGroupId()
     {
 		$this->db->query("INSERT INTO usvn_users (users_id, users_login, users_password, users_is_admin) VALUES (1,'noplay', 'xxx', 0);");
 		$this->db->query("INSERT INTO usvn_users (users_id, users_login, users_password, users_is_admin) VALUES (2,'stem', 'xxx', 0);");

@@ -36,7 +36,7 @@ class USVN_Db_Table_GroupsTest extends USVN_Test_DBTestCase
         $result = PHPUnit_TextUI_TestRunner::run($suite);
     }
 
-    public function testInsertGroupNoName()
+    public function test_InsertGroup_NoName()
 	{
 		$table = new USVN_Db_Table_Groups();
 		$obj = $table->fetchNew();
@@ -51,7 +51,7 @@ class USVN_Db_Table_GroupsTest extends USVN_Test_DBTestCase
 		$this->fail();
     }
 
-    public function testInsertGroupNoName2()
+    public function test_InsertGroup_NoName2()
 	{
 		$table = new USVN_Db_Table_Groups();
 		$obj = $table->fetchNew();
@@ -66,7 +66,7 @@ class USVN_Db_Table_GroupsTest extends USVN_Test_DBTestCase
 		$this->fail();
     }
 
-    public function testInsertGroupInvalidName()
+    public function test_InsertGroup_InvalidName()
 	{
 		$table = new USVN_Db_Table_Groups();
 		$obj = $table->fetchNew();
@@ -81,7 +81,7 @@ class USVN_Db_Table_GroupsTest extends USVN_Test_DBTestCase
 		$this->fail();
 	}
 
-	    public function testInsertGroupInvalidName2()
+	    public function test_InsertGroup_InvalidName2()
 	{
 		$table = new USVN_Db_Table_Groups();
 		$obj = $table->fetchNew();
@@ -96,7 +96,7 @@ class USVN_Db_Table_GroupsTest extends USVN_Test_DBTestCase
 		$this->fail();
 	}
 
-    public function testInsertGroupOk()
+    public function test_InsertGroup_Ok()
 	{
 		$table = new USVN_Db_Table_Groups();
 		$obj = $table->fetchNew();
@@ -105,7 +105,7 @@ class USVN_Db_Table_GroupsTest extends USVN_Test_DBTestCase
 		$this->assertTrue($table->isAGroup('InsertGroupOk'));
     }
 
-    public function testUpdateGroupNoName()
+    public function test_UpdateGroup_NoName()
 	{
 		$table = new USVN_Db_Table_Groups();
 		$obj = $table->fetchNew();
@@ -123,7 +123,7 @@ class USVN_Db_Table_GroupsTest extends USVN_Test_DBTestCase
 		$this->fail();
 	}
 
-    public function testUpdateGroupOk()
+    public function test_UpdateGroup_Ok()
 	{
 		$table = new USVN_Db_Table_Groups();
 		$obj = $table->fetchNew();
@@ -136,7 +136,7 @@ class USVN_Db_Table_GroupsTest extends USVN_Test_DBTestCase
 		$this->assertTrue($table->isAGroup('UpdateGroupOk2'));
     }
 
-    public function testUpdateOnlyDesc()
+    public function test_UpdateOnlyDesc()
 	{
 		$table = new USVN_Db_Table_Groups();
 		$obj = $table->fetchNew();
@@ -149,7 +149,7 @@ class USVN_Db_Table_GroupsTest extends USVN_Test_DBTestCase
 		$this->assertTrue($table->isAGroup('UpdateGroupOk'));
     }
 
-	public function testDeleteAffectedGroup()
+	public function test_DeleteAffectedGroup()
 	{
 		$table = new USVN_Db_Table_GroupsToProjects();
 		$project = $this->createProject("project");
@@ -171,7 +171,7 @@ class USVN_Db_Table_GroupsTest extends USVN_Test_DBTestCase
 		$this->assertEquals(0, count($table->findByProjectId($project->id)));
 	}
 
-	public function testFindUserInGroup()
+	public function test_FindUserInGroup()
 	{
 		$test = $this->createUser("test");
 		$babar = $this->createUser("babar");
@@ -207,7 +207,7 @@ class USVN_Db_Table_GroupsTest extends USVN_Test_DBTestCase
 		$this->assertNotContains("john", $res);
 	}
 
-	function testFetchAllForUserAndProject()
+	function test_fetchAllForUserAndProject()
 	{
 		$group1 = $this->createGroup("group1");
 		$group2 = $this->createGroup("group2");

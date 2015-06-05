@@ -150,7 +150,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		$this->assertEquals( $expected_svn_list, USVN_SVNUtils::listSVN( TEST_REPOS_PATH . '/' . $project_name, '/' ) );
 	}
 
-	public function testCreateProjectWithMultiDirectoryOk()
+	public function test_createProject_WithMultiDirectory()
 	{
 		// Setup
 		$project_name = 'ok/TestProject';
@@ -163,7 +163,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		$this->_checkSVNRepositoryExists( $project_name );
 	}
 
-	public function testCreateProjectWithGroupWithAdmin()
+	public function test_createProject_WithGroupWithAdmin()
 	{
 		// Setup
 		$project_name = 'TestProject';
@@ -182,7 +182,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		$this->_checkRepoStructureEmptyDir( $project_name );
 	}
 
-	public function testCreateProjectWithGroupWithAdminWithStdDir()
+	public function test_createProject_WithGroupWithAdminWithStdDir()
 	{
 		// Setup
 		$project_name = 'TestProject';
@@ -204,7 +204,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		$this->_checkRepoStructureStdDir( $project_name );
 	}
 
-	public function testCreateProjectWithGroupButNotGroupMemberWithAdmin()
+	public function test_createProject_WithGroupButNotGroupMemberWithAdmin()
 	{
 		// Setup
 		$project_name = 'TestProject';
@@ -223,7 +223,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		$this->_checkRepoStructureEmptyDir( $project_name );
 	}
 
-	public function testCreateProjectWithGroupWithoutAdmin()
+	public function test_createProject_WithGroupWithoutAdmin()
 	{
 		// Setup
 		$project_name = 'TestProject';
@@ -242,7 +242,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		$this->_checkRepoStructureEmptyDir( $project_name );
 	}
 
-	public function testCreateProjectWithoutGroupWithAdmin()
+	public function test_CreateProject_WithoutGroupWithAdmin()
 	{
 		// Setup
 		$project_name = 'TestProject';
@@ -259,7 +259,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		$this->_checkRepoStructureEmptyDir( $project_name );
 	}
 
-	public function testCreateProjectWithoutGroupWithAdminButWithStdDir()
+	public function test_createProject_WithoutGroupWithAdminButWithStdDir()
 	{
 		// Setup
 		$project_name = 'TestProject';
@@ -276,7 +276,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		$this->_checkRepoStructureStdDir( $project_name );
 	}
 
-	public function testCreateProjectWithoutGroupWithoutAdmin()
+	public function test_createProject_WithoutGroupWithoutAdmin()
 	{
 		// Setup
 		$project_name = 'TestProject';
@@ -293,7 +293,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		$this->_checkRepoStructureEmptyDir( $project_name );
 	}
 
-	public function testCreateProjectWithoutGroupWithoutAdminButWithStdDir()
+	public function test_createProject_WithoutGroupWithoutAdminButWithStdDir()
 	{
 		// Setup
 		$project_name = 'TestProject';
@@ -310,7 +310,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		$this->_checkRepoStructureStdDir( $project_name );
 	}
 
-	public function testCreateProjectWithGroupWithInvalidAdmin()
+	public function test_createProject_WithGroupWithInvalidAdmin()
 	{
 		// Setup
 		$project_name = 'TestProject';
@@ -338,7 +338,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		$this->fail( "The project creation should have failed" );
 	}
 	
-	public function testCreateProjectWithGroupButGroupAlreadyExisting()
+	public function test_createProject_WithGroupButGroupAlreadyExisting()
 	{
 		// Setup
 		$project_name = 'TestProject';
@@ -380,7 +380,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 	  $this->fail("Il n'y a pas eu d'exception pour la creation d'un projet dans une mauvaise arborescence...");
 	  } */
 
-	public function testDeleteProject()
+	public function test_deleteProject()
 	{
 		// Setup
 		$project_name = 'TestProject';
@@ -406,7 +406,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		$this->assertFalse( USVN_SVNUtils::isSVNRepository( TEST_REPOS_PATH . '/' . $project_name ), "The SVN repository hasn't been deleted" );
 	}
 
-	public function testDeleteProjectNotExisting()
+	public function test_deleteProject_NotExisting()
 	{
 		// Setup
 		$project_name = 'TestProject';
@@ -515,7 +515,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		$this->assertEquals( $expected_svn_list, USVN_SVNUtils::listSVN( TEST_REPOS_PATH . '/' . $project_name, '/' ) );
 	}
 
-	public function testCreateProjectFromTemplateWithAdmin()
+	public function test_createProjectFromTemplate_WithAdmin()
 	{
 		// Setup
 		$project_name = 'TestProject';
@@ -535,7 +535,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		$this->_checkRepoStructureTemplate1( $project_name );
 	}
 
-	public function testCreateProjectFromTemplateWithoutAdmin()
+	public function test_createProjectFromTemplate_WithoutAdmin()
 	{
 		// Setup
 		$project_name = 'TestProject';
@@ -555,7 +555,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		$this->_checkRepoStructureTemplate1( $project_name );
 	}
 	
-	public function testCreateProjectFromTemplateWithAdminWithAccessFile()
+	public function test_createProjectFromTemplate_WithAdminWithAccessFile()
 	{
 		// Setup
 		$project_name = 'TestProject';
@@ -590,7 +590,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		$this->_checkRepoStructureTemplate1( $project_name );
 	}
 
-	public function testCreateProjectFromTemplateWithAdminWithAccessFileButUndefinedProjectGroup()
+	public function test_createProjectFromTemplate_WithAdminWithAccessFileButUndefinedProjectGroup()
 	{
 		// Setup
 		$project_name = 'TestProject';
@@ -616,7 +616,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		$this->fail( "The project creation should have failed" );
 	}
 
-	public function testCreateProjectFromTemplateWithAdminWithAccessFileWithPredefinedGroup()
+	public function test_createProjectFromTemplate_WithAdminWithAccessFileWithPredefinedGroup()
 	{
 		// Setup
 		$project_name = 'TestProject';
@@ -656,7 +656,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		$this->_checkRepoStructureTemplate1( $project_name );
 	}
 	
-	public function testCreateProjectFromTemplateWithAdminWithAccessFileButUnexistingPredefinedGroup()
+	public function test_createProjectFromTemplate_WithAdminWithAccessFileButUnexistingPredefinedGroup()
 	{
 		// Setup
 		$project_name = 'TestProject';
@@ -682,7 +682,7 @@ class USVN_ProjectsTest extends USVN_Test_DBTestCase
 		$this->fail( "The project creation should have failed" );
 	}
 	
-	public function testDeleteProjectCreatedFromTemplate()
+	public function test_deleteProject_CreatedFromTemplate()
 	{
 		// Setup
 		$project_name = 'TestProject';
