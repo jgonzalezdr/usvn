@@ -36,38 +36,39 @@ class USVN_MenuTest extends USVN_Test_DBTestCase
 	protected function setUp()
 	{
 		parent::setUp();
-
-		$this->_menudir = TESTING_DIR.'/menus';
 		
+		$this->_menudir = TESTING_DIR.'/tmp_menus';
+		USVN_DirectoryUtils::removeDirectory($this->_menudir);
 		mkdir($this->_menudir);
-        file_put_contents($this->_menudir . "/beta.php", '
-<?php
+
+		file_put_contents($this->_menudir . "/beta.php",
+'<?php
 class menus_beta extends USVN_AbstractMenu
 {
 	public function getProjectSubMenu()
 	{
 		 $project = $this->_request->getParam("project");
-            return array(
-                  array(
-                    "title" => "beta",
-                    "link"=> "project/" . $project . "/beta/",
-                    "controller" => "index",
-                    "action" => ""
-                )
-            );
+		return array(
+			  array(
+				"title" => "beta",
+				"link"=> "project/" . $project . "/beta/",
+				"controller" => "index",
+				"action" => ""
+			)
+		);
     }
 
 	public function getGroupSubMenu()
 	{
-		 $group = $this->_request->getParam("group");
-            return array(
-                  array(
-                    "title" => "beta",
-                    "link"=> "group/" . $group . "/beta/",
-                    "controller" => "index",
-                    "action" => ""
-                )
-            );
+		$group = $this->_request->getParam("group");
+		return array(
+			  array(
+				"title" => "beta",
+				"link"=> "group/" . $group . "/beta/",
+				"controller" => "index",
+				"action" => ""
+			)
+		);
 	}
 
     public function getAdminSubMenu()
@@ -95,67 +96,66 @@ class menus_beta extends USVN_AbstractMenu
 			)
             ));
     }
-}
-');
+}');
         require_once($this->_menudir . "/beta.php");
-        file_put_contents($this->_menudir . "/alpha.php", '
-<?php
+		
+        file_put_contents($this->_menudir . "/alpha.php",
+'<?php
 class menus_alpha extends USVN_AbstractMenu
 {
 	public function getProjectSubMenu()
 	{
-		 $project = $this->_request->getParam("project");
-            return array(
-                  array(
-                    "title" => "alpha",
-                    "link"=> "project/" . $project . "/alpha/",
-                    "controller" => "index",
-                    "action" => ""
-                )
-            );
+		$project = $this->_request->getParam("project");
+		return array(
+			  array(
+				"title" => "alpha",
+				"link"=> "project/" . $project . "/alpha/",
+				"controller" => "index",
+				"action" => ""
+			)
+		);
     }
 
 	public function getGroupSubMenu()
 	{
-		 $group = $this->_request->getParam("group");
-            return array(
-                  array(
-                    "title" => "alpha",
-                    "link"=> "group/" . $group . "/alpha/",
-                    "controller" => "index",
-                    "action" => ""
-                )
-            );
+		$group = $this->_request->getParam("group");
+		return array(
+			  array(
+				"title" => "alpha",
+				"link"=> "group/" . $group . "/alpha/",
+				"controller" => "index",
+				"action" => ""
+			)
+		);
 	}
 
 	public function getAdminSubMenu()
 	{
-		 $project = $this->_request->getParam("project");
-            return array(
-                  array(
-                    "title" => "alpha admin",
-                    "link"=> "project/" . $project . "/alpha/",
-                    "controller" => "index",
-                    "action" => ""
-                )
-            );
+		$project = $this->_request->getParam("project");
+		return array(
+			  array(
+				"title" => "alpha admin",
+				"link"=> "project/" . $project . "/alpha/",
+				"controller" => "index",
+				"action" => ""
+			)
+		);
     }
 
     public function getSubSubMenu()
     {
         return (
             array(
-            array(
-				"title" => "Alpha new user",
-				"link"=> "admin/user/new/",
-				"controller" => "alpha",
-				"action" => "new"
-			)
+				array(
+					"title" => "Alpha new user",
+					"link"=> "admin/user/new/",
+					"controller" => "alpha",
+					"action" => "new"
+				)
             )
-            );
+        );
     }
-}
-');
+}');
         require_once($this->_menudir . "/alpha.php");
     }
 
