@@ -2,7 +2,10 @@ User-friendly SVN
 ================
 
 Travis Linux build status:
-[![Build Status](https://travis-ci.org/jgonzalezdr/usvn.png?branch=master)](https://travis-ci.org/jgonzalezdr/usvn)
+[![Build Status](https://travis-ci.org/jgonzalezdr/usvn.svg?branch=master)](https://travis-ci.org/jgonzalezdr/usvn)
+
+Coveralls coverage status:
+[![Coverage Status](https://coveralls.io/repos/jgonzalezdr/usvn/badge.svg?branch=master)](https://coveralls.io/r/jgonzalezdr/usvn?branch=master)
 
 ### Important links
  * Official website: http://www.usvn.info
