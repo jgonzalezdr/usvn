@@ -1,0 +1,3 @@
+src_dir: src
+coverage_clover: src/clover.xml
+json_path: src/coveralls-upload.json

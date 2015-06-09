@@ -3,12 +3,13 @@ language: php
 php: 5.3
 
 before_script:
-  - cd src 
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install --dev --no-interaction
+  - cd src 
 
 script:
   - phpunit --coverage-clover clover.xml
 
 after_script:
+  - cd .. 
   - php vendor/bin/coveralls -v
