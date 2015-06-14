@@ -19,17 +19,15 @@
 
 // Call SystemreportControllerTest::main() if this source file is executed directly.
 if (!defined("PHPUnit_MAIN_METHOD")) {
-    define("PHPUnit_MAIN_METHOD", "SystemreportxmladminControllerTest::main");
+    define("PHPUnit_MAIN_METHOD", "SystemadminControllerTest::main");
 }
 
-require_once "PHPUnit/Framework/TestCase.php";
-require_once "PHPUnit/Framework/TestSuite.php";
+require_once 'test/TestSetup.php';
 
-require_once 'library/USVN/autoload.php';
-
-class SystemreportxmladminControllerTest extends USVN_Test_AdminController {
-	protected $controller_name = "systemreportxmladmin";
-	protected $controller_class = "SystemreportxmladminController";
+class SystemadminControllerTest extends USVN_Test_AdminControllerTestCase
+{
+	protected $controller_name = "systemreportadmin";
+	protected $controller_class = "SystemreportadminController";
 
     /**
      * Runs the test methods of this class.
@@ -37,30 +35,28 @@ class SystemreportxmladminControllerTest extends USVN_Test_AdminController {
      * @access public
      * @static
      */
-    public static function main() {
-        require_once "PHPUnit/TextUI/TestRunner.php";
-
-        $suite  = new PHPUnit_Framework_TestSuite("SystemreportxmladminControllerTest");
+    public static function main()
+	{
+        $suite  = new PHPUnit_Framework_TestSuite("SystemadminControllerTest");
         $result = PHPUnit_TextUI_TestRunner::run($suite);
     }
     
-	protected function setUp()
-    {
-    	parent::setUp();
-		$config = Zend_Registry::get('config');
-		$config->database = array("adapterName" => "mysql");
-    }
-    
-    
 	public function test_index()
 	{
+		// Prepare
+		$config = Zend_Registry::get( 'config' );
+		$config->url = array ( "base" => "usvn" );
+
+		// Exercise
 		$this->runAction('index');
-		$this->assertContains('<informations>', $this->getBody());
+
+		// Verify
+		$this->assertContains( "<h1>System report</h1>", $this->getBody() );
 	}
 }
 
 // Call SystemreportControllerTest::main() if this source file is executed directly.
-if (PHPUnit_MAIN_METHOD == "SystemadminreportxmlControllerTest::main") {
+if (PHPUnit_MAIN_METHOD == "SystemadminControllerTest::main") {
     SystemadminControllerTest::main();
 }
 ?>

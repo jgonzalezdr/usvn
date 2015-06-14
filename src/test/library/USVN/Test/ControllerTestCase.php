@@ -20,14 +20,12 @@
 
 require_once 'test/TestSetup.php';
 
-define('USVN_VIEWS_DIR', 'www/views/');
-define('USVN_HELPERS_DIR', 'www/helpers/');
-define('USVN_CONTROLLERS_DIR', 'www/controllers/');
-define('USVN_CONFIG_SECTION', 'general');
-define('USVN_ROUTES_CONFIG_FILE', 'www/USVN/routes.ini');
+define('USVN_VIEWS_DIR',			USVN_APP_DIR . '/views/scripts');
+define('USVN_HELPERS_DIR',			USVN_APP_DIR . '/helpers');
+define('USVN_CONTROLLERS_DIR',		USVN_APP_DIR . '/controllers');
+define('USVN_ROUTES_CONFIG_FILE',	USVN_APP_DIR . '/routes.ini');
 
-
-class USVN_Test_ControllerTestCase extends USVN_Test_DBTestCase
+abstract class USVN_Test_ControllerTestCase extends USVN_Test_DBTestCase
 {
 	/* To be overload */
 	protected $controller_name;
@@ -44,8 +42,8 @@ class USVN_Test_ControllerTestCase extends USVN_Test_DBTestCase
 	{
 		parent::setUp();
 
-
-		foreach (array_keys($_POST) as $key) {
+		foreach (array_keys($_POST) as $key)
+		{
 			unset($_POST[$key]);
 		}
 		Zend_Auth::getInstance()->setStorage(new Zend_Auth_Storage_NonPersistent());
@@ -61,15 +59,13 @@ class USVN_Test_ControllerTestCase extends USVN_Test_DBTestCase
 
 		$table = new USVN_Db_Table_Users();
 		$this->user = $table->fetchNew();
-		$this->user->setFromArray(array(
-													'users_login' => 'john',
-													'users_password' => 'pinocchio'));
+		$this->user->setFromArray(array( 'users_login' => 'john',
+										 'users_password' => 'pinocchio'));
 		$this->user->save();
 		$this->admin_user = $table->fetchNew();
-		$this->admin_user->setFromArray(array(
-													'users_login' => 'god',
-													'users_password' => 'ingodwetrust',
-													'users_is_admin' => true));
+		$this->admin_user->setFromArray(array( 'users_login' => 'god',
+											   'users_password' => 'ingodwetrust',
+											   'users_is_admin' => true));
 		$this->admin_user->save();
 
 		$authAdapter = new USVN_Auth_Adapter_Database('john', 'pinocchio');
@@ -81,6 +77,8 @@ class USVN_Test_ControllerTestCase extends USVN_Test_DBTestCase
 		$this->response = new Zend_Controller_Response_Cli();
 		$front->setResponse($this->response);
 		$router->addRoute('default', new Zend_Controller_Router_Route_Module(array(), $front->getDispatcher(), $front->getRequest()));
+
+		Zend_Controller_Action_HelperBroker::addHelper(new Zend_Layout_Controller_Action_Helper_Layout);
 	}
 
 	protected function tearDown()
@@ -110,10 +108,10 @@ class USVN_Test_ControllerTestCase extends USVN_Test_DBTestCase
 		$this->request->setActionName($action);
 		$this->request->setParam('action', $action);
 		$this->request->setDispatched(true);
-		require_once 'www/controllers/' . $this->controller_class . '.php';
+		require_once USVN_CONTROLLERS_DIR . "/" . $this->controller_class . '.php';
 		$this->controller = new $this->controller_class($this->request, $this->response);
 		$this->controller->dispatch($action. "Action");
-		$content = ob_get_flush();
+		$content = ob_get_contents();
 	}
 
 	protected function getBody()

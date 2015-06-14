@@ -19,7 +19,7 @@
 
 require_once 'test/TestSetup.php';
 
-define( 'UTEST_SVN_URL_SEP',   ':' );
+define( 'USVN_URL_SEP',   ':' );
 define( 'TEST_USVN_PATH',      TESTING_DIR."/usvn" );
 define( 'TEST_REPOS_PATH',     TEST_USVN_PATH."/svn" );
 define( 'TEST_SVN_URL',        "http://localhost/" );

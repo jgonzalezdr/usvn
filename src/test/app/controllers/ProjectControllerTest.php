@@ -23,12 +23,10 @@ if (!defined("PHPUnit_MAIN_METHOD")) {
     define("PHPUnit_MAIN_METHOD", "ProjectControllerTest::main");
 }
 
-require_once "PHPUnit/Framework/TestCase.php";
-require_once "PHPUnit/Framework/TestSuite.php";
+require_once 'test/TestSetup.php';
 
-require_once 'library/USVN/autoload.php';
-
-class ProjectControllerTest extends USVN_Test_Controller {
+class ProjectControllerTest extends USVN_Test_ControllerTestCase
+{
 	protected $controller_name = "project";
 	protected $controller_class = "ProjectController";
 
@@ -38,9 +36,8 @@ class ProjectControllerTest extends USVN_Test_Controller {
      * @access public
      * @static
      */
-    public static function main() {
-        require_once "PHPUnit/TextUI/TestRunner.php";
-
+    public static function main()
+	{
         $suite  = new PHPUnit_Framework_TestSuite("ProjectControllerTest");
         $result = PHPUnit_TextUI_TestRunner::run($suite);
     }

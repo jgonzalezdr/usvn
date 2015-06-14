@@ -20,7 +20,7 @@
 
 require_once 'test/TestSetup.php';
 
-class USVN_Test_AdminControllerTestCase extends USVN_Test_ControllerTestCase
+abstract class USVN_Test_AdminControllerTestCase extends USVN_Test_ControllerTestCase
 {
 	protected function setUp()
 	{

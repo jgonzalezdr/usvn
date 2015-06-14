@@ -23,12 +23,10 @@ if (!defined("PHPUnit_MAIN_METHOD")) {
     define("PHPUnit_MAIN_METHOD", "IndexControllerTest::main");
 }
 
-require_once "PHPUnit/Framework/TestCase.php";
-require_once "PHPUnit/Framework/TestSuite.php";
+require_once 'test/TestSetup.php';
 
-require_once 'library/USVN/autoload.php';
-
-class IndexControllerTest extends USVN_Test_Controller {
+class IndexControllerTest extends USVN_Test_ControllerTestCase
+{
 	protected $controller_name = "index";
 	protected $controller_class = "IndexController";
 
@@ -38,9 +36,8 @@ class IndexControllerTest extends USVN_Test_Controller {
      * @access public
      * @static
      */
-    public static function main() {
-        require_once "PHPUnit/TextUI/TestRunner.php";
-
+    public static function main()
+	{
         $suite  = new PHPUnit_Framework_TestSuite("IndexControllerTest");
         $result = PHPUnit_TextUI_TestRunner::run($suite);
     }
@@ -66,8 +63,8 @@ class IndexControllerTest extends USVN_Test_Controller {
 
 		$this->runAction('index');
 		$this->assertEquals(2, count($this->controller->view->projects));
-		$this->assertContains('href="/project/OpenBSD">OpenBSD</a>', $this->getBody(), $this->getBody());
-		$this->assertContains('href="/project/Hurd">Hurd</a>', $this->getBody());
+		$this->assertRegExp('~<a href="/project/OpenBSD">.*?OpenBSD.*?</a>~sm', $this->getBody(), "Expected project OpenBSD not found in body" );
+		$this->assertRegExp('~<a href="/project/Hurd">.*?Hurd.*?</a>~sm', $this->getBody(), "Expected project Hurd not found in body" );
 	}
 
 	public function test_indexActionNoGroup()
@@ -98,8 +95,8 @@ class IndexControllerTest extends USVN_Test_Controller {
 		$this->user->addGroup($g2);
 		$this->runAction('index');
 		$this->assertEquals(2, count($this->controller->view->groups));
-		$this->assertContains('href="/group/Indochine">Indochine</a>', $this->getBody(), $this->getBody());
-		$this->assertContains('href="/group/Telephone">Telephone</a>', $this->getBody());
+		$this->assertRegExp('~<a href="/group/Indochine">.*?Indochine.*?</a>~sm', $this->getBody(), "Expected group Indochine not found in body" );
+		$this->assertRegExp('~<a href="/group/Telephone">.*?Telephone.*?</a>~sm', $this->getBody(), "Expected group Telephone not found in body" );
 	}
 }
 

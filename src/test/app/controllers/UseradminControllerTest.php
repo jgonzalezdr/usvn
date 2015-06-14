@@ -23,12 +23,10 @@ if (!defined("PHPUnit_MAIN_METHOD")) {
     define("PHPUnit_MAIN_METHOD", "UseradminControllerTest::main");
 }
 
-require_once "PHPUnit/Framework/TestCase.php";
-require_once "PHPUnit/Framework/TestSuite.php";
+require_once 'test/TestSetup.php';
 
-require_once 'library/USVN/autoload.php';
-
-class UseradminControllerTest extends USVN_Test_AdminController {
+class UseradminControllerTest extends USVN_Test_AdminControllerTestCase
+{
 	protected $controller_name = "useradmin";
 	protected $controller_class = "UseradminController";
 
@@ -38,9 +36,8 @@ class UseradminControllerTest extends USVN_Test_AdminController {
      * @access public
      * @static
      */
-    public static function main() {
-        require_once "PHPUnit/TextUI/TestRunner.php";
-
+    public static function main()
+	{
         $suite  = new PHPUnit_Framework_TestSuite("UseradminControllerTest");
         $result = PHPUnit_TextUI_TestRunner::run($suite);
     }

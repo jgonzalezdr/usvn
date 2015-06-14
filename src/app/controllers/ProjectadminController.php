@@ -55,7 +55,7 @@ class ProjectadminController extends AdminadminController
 		}
 		try {
 			$identity = Zend_Auth::getInstance()->getIdentity();
-			$template_name = $_POST['prj_template'];
+			$template_name = isset($_POST['prj_template']) ? $_POST['prj_template'] : NULL;
 			if( $template_name == NULL )
 			{
 				USVN_Project::createProject($data, $identity['username'], $_POST['creategroup'], $_POST['addmetogroup'], $_POST['admin'], $_POST['createsvndir']);

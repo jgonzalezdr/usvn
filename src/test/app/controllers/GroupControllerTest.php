@@ -23,12 +23,9 @@ if (!defined("PHPUnit_MAIN_METHOD")) {
     define("PHPUnit_MAIN_METHOD", "GroupControllerTest::main");
 }
 
-require_once "PHPUnit/Framework/TestCase.php";
-require_once "PHPUnit/Framework/TestSuite.php";
+require_once 'test/TestSetup.php';
 
-require_once 'library/USVN/autoload.php';
-
-class GroupControllerTest extends USVN_Test_Controller {
+class GroupControllerTest extends USVN_Test_ControllerTestCase {
 	protected $controller_name = "group";
 	protected $controller_class = "GroupController";
 	private $groups;
@@ -39,9 +36,8 @@ class GroupControllerTest extends USVN_Test_Controller {
      * @access public
      * @static
      */
-    public static function main() {
-        require_once "PHPUnit/TextUI/TestRunner.php";
-
+    public static function main()
+	{
         $suite  = new PHPUnit_Framework_TestSuite("GroupControllerTest");
         $result = PHPUnit_TextUI_TestRunner::run($suite);
     }
@@ -49,6 +45,7 @@ class GroupControllerTest extends USVN_Test_Controller {
 	protected function setUp()
 	{
 		parent::setUp();
+		
 		$this->groups = new USVN_Db_Table_Groups();
 		$g1 = $this->groups->insert(
 			array(
